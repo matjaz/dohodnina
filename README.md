@@ -1,5 +1,8 @@
-Izračun dohodnine
-=================
+# Izračun dohodnine
+
+## Installation
+
+    npm i dohodnina --save
 
 Izračun dohodnine 2020 - 2025.
 
