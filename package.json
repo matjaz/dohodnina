@@ -1,0 +1,20 @@
+{
+  "name": "dohodnina",
+  "version": "1.0.0",
+  "description": "Izračun dohodnine",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "dohodnina",
+    "slovenija",
+    "slovenia",
+    "tax"
+  ],
+  "author": "Matjaz Lipus",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^27.5.1"
+  }
+}
