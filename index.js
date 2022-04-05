@@ -10,15 +10,16 @@ function letna_dohodnina_razred(leto, neto_letna_davcna_osnova)
 function letna_dohodnina(leto, neto_letna_davcna_osnova)
 {
     // Izračuna letno neto dohodnino glede na lestvico
-    if (neto_letna_davcna_osnova <= 8500)
-        return neto_letna_davcna_osnova * .16
-    if (neto_letna_davcna_osnova <= 25000)
-        return 1360 + (neto_letna_davcna_osnova - 8500) * .26
-    if (neto_letna_davcna_osnova <= 50000)
-        return 5650 + (neto_letna_davcna_osnova - 25000) * .33
-    if (neto_letna_davcna_osnova <= 72000)
-        return 13900 + (neto_letna_davcna_osnova - 50000) * .39
-    return 22480 + (neto_letna_davcna_osnova - 72000) * (leto < 2022 ? .50 : .45)
+    let faktor = 1 + Math.max(leto - 2021, 0) * 0.03
+    if (neto_letna_davcna_osnova <= 8500 * faktor)
+        return round(neto_letna_davcna_osnova * .16)
+    if (neto_letna_davcna_osnova <= 25000 * faktor)
+        return round(1360 * faktor + (neto_letna_davcna_osnova - 8500 * faktor) * .26)
+    if (neto_letna_davcna_osnova <= 50000 * faktor)
+        return round(5650 * faktor + (neto_letna_davcna_osnova - 25000 * faktor) * .33)
+    if (neto_letna_davcna_osnova <= 72000 * faktor)
+        return round(13900 * faktor + (neto_letna_davcna_osnova - 50000 * faktor) * .39)
+    return round(22480 * faktor + (neto_letna_davcna_osnova - 72000 * faktor) * (leto < 2022 ? .50 : .45))
 }
 
 function splosna_olajsava(leto, skupni_dohodek)
@@ -41,7 +42,7 @@ function splosna_olajsava(leto, skupni_dohodek)
     return olajsava
 }
 
-function olajsava_vzdrzevani_otroci(stevilo_vzdrzevanih_otrok)
+function olajsava_vzdrzevani_otroci(leto, stevilo_vzdrzevanih_otrok)
 {
     // Izračun olajšave glede na število vzdrževanih otrok (<18 let)
     var olajsava = 0
@@ -67,7 +68,7 @@ function olajsava_vzdrzevani_otroci(stevilo_vzdrzevanih_otrok)
             }
         }
     }
-    return olajsava
+    return leto < 2022 ? olajsava : olajsava * 1.03
 }
 
 function olajsava_vzdrzevani_druzinski_clani(stevilo_vzdrzevanih_druzinskih_clanov)
@@ -129,7 +130,7 @@ function letna_davcna_osnova(
         invalid
     )
 
-    var olajsava_za_vzdrzevane_otroke = olajsava_vzdrzevani_otroci(stevilo_vzdrzevanih_otrok) * stevilo_vzdrzevanih_mesecev / 12
+    var olajsava_za_vzdrzevane_otroke = olajsava_vzdrzevani_otroci(leto, stevilo_vzdrzevanih_otrok) * stevilo_vzdrzevanih_mesecev / 12
 
     // Prispevki (za pokojninsko in invalidsko zavarovanje)
     // Zaposleni:  22.1%
@@ -163,6 +164,11 @@ function izracunaj_dohodnino(
     return letna_dohodnina(leto, neto_davcna_osnova)
 }
 
+function round(n)
+{
+    return Math.round(n * 100) / 100
+}
+
 exports.letna_dohodnina_razred = letna_dohodnina_razred
 exports.letna_dohodnina = letna_dohodnina
 exports.splosna_olajsava = splosna_olajsava
@@ -171,3 +177,4 @@ exports.olajsava_vzdrzevani_druzinski_clani = olajsava_vzdrzevani_druzinski_clan
 exports.ostale_olajsave = ostale_olajsave
 exports.letna_davcna_osnova = letna_davcna_osnova
 exports.izracunaj_dohodnino = izracunaj_dohodnino
+exports.round = round
