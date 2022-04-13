@@ -1,16 +1,17 @@
 function letna_dohodnina_razred(leto, neto_letna_davcna_osnova)
 {
-    if (neto_letna_davcna_osnova <= 8500)  return 16
-    if (neto_letna_davcna_osnova <= 25000) return 26
-    if (neto_letna_davcna_osnova <= 50000) return 33
-    if (neto_letna_davcna_osnova <= 72000) return 39
+    var faktor = faktor_osnove(leto)
+    if (neto_letna_davcna_osnova <= 8500  * faktor) return 16
+    if (neto_letna_davcna_osnova <= 25000 * faktor) return 26
+    if (neto_letna_davcna_osnova <= 50000 * faktor) return 33
+    if (neto_letna_davcna_osnova <= 72000 * faktor) return 39
     return leto < 2022 ? 50 : 45
 }
 
 function letna_dohodnina(leto, neto_letna_davcna_osnova)
 {
     // Izračuna letno neto dohodnino glede na lestvico
-    let faktor = 1 + Math.max(leto - 2021, 0) * 0.03
+    var faktor = faktor_osnove(leto)
     if (neto_letna_davcna_osnova <= 8500 * faktor)
         return round(neto_letna_davcna_osnova * .16)
     if (neto_letna_davcna_osnova <= 25000 * faktor)
@@ -20,6 +21,11 @@ function letna_dohodnina(leto, neto_letna_davcna_osnova)
     if (neto_letna_davcna_osnova <= 72000 * faktor)
         return round(13900 * faktor + (neto_letna_davcna_osnova - 50000 * faktor) * .39)
     return round(22480 * faktor + (neto_letna_davcna_osnova - 72000 * faktor) * (leto < 2022 ? .50 : .45))
+}
+
+function faktor_osnove(leto)
+{
+    return 1 + Math.min(Math.max(leto - 2021, 0), 4) * 0.03
 }
 
 function splosna_olajsava(leto, skupni_dohodek)
