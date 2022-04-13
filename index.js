@@ -74,7 +74,7 @@ function olajsava_vzdrzevani_otroci(leto, stevilo_vzdrzevanih_otrok)
             }
         }
     }
-    return leto < 2022 ? olajsava : olajsava * 1.03
+    return leto < 2022 ? olajsava : olajsava * faktor_osnove(leto)
 }
 
 function olajsava_vzdrzevani_druzinski_clani(stevilo_vzdrzevanih_druzinskih_clanov)

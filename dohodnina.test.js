@@ -52,17 +52,17 @@ describe('dohodnina 1 otrok', () => {
 
     test('2023', () => {
         expect(izracunaj_dohodnino(2023, 8500, 1)).toBe(0)
-        expect(izracunaj_dohodnino(2023, 24000, 1)).toBe(1877.35) // 156,45/m
+        expect(izracunaj_dohodnino(2023, 24000, 1)).toBe(1858.34) // 154,86/m
     })
 
     test('2024', () => {
         expect(izracunaj_dohodnino(2024, 8500, 1)).toBe(0)
-        expect(izracunaj_dohodnino(2024, 24000, 1)).toBe(1591.85) // 132,65/m
+        expect(izracunaj_dohodnino(2024, 24000, 1)).toBe(1553.84) // 129,49/m
     })
 
     test('2025', () => {
         expect(izracunaj_dohodnino(2025, 8500, 1)).toBe(0)
-        expect(izracunaj_dohodnino(2025, 24000, 1)).toBe(1389.76) // 115,81/m
+        expect(izracunaj_dohodnino(2025, 24000, 1)).toBe(1354.66) // 112,89/m
     })
 })
 
