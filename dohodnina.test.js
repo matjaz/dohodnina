@@ -74,21 +74,21 @@ describe('dohodnina 1 vzdrževan član', () => {
 
     test('2022', () => {
         expect(izracunaj_dohodnino(2022, 8500, 0, 1)).toBe(0)
-        expect(izracunaj_dohodnino(2022, 24000, 0, 1)).toBe(2181.86) // 181,82/m
+        expect(izracunaj_dohodnino(2022, 24000, 0, 1)).toBe(2162.85) // 180,24/m
     })
 
     test('2023', () => {
         expect(izracunaj_dohodnino(2023, 8500, 0, 1)).toBe(0)
-        expect(izracunaj_dohodnino(2023, 24000, 0, 1)).toBe(1896.36) // 158,03/m
+        expect(izracunaj_dohodnino(2023, 24000, 0, 1)).toBe(1858.34) // 154,86/m
     })
 
     test('2024', () => {
         expect(izracunaj_dohodnino(2024, 8500, 0, 1)).toBe(0)
-        expect(izracunaj_dohodnino(2024, 24000, 0, 1)).toBe(1610.86) // 134,24/m
+        expect(izracunaj_dohodnino(2024, 24000, 0, 1)).toBe(1553.84) // 129,49/m
     })
 
     test('2025', () => {
         expect(izracunaj_dohodnino(2025, 8500, 0, 1)).toBe(0)
-        expect(izracunaj_dohodnino(2025, 24000, 0, 1)).toBe(1401.45) // 116,79/m
+        expect(izracunaj_dohodnino(2025, 24000, 0, 1)).toBe(1354.66) // 112,89/m
     })
 })

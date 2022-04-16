@@ -43,8 +43,9 @@ function splosna_olajsava(leto, skupni_dohodek)
     } else {
         olajsava = 7500
     }
-    if (skupni_dohodek <= 13316.83)
-        return olajsava + (18700.38 - 1.40427 * skupni_dohodek)
+    var faktor = faktor_osnove(leto)
+    if (skupni_dohodek <= 13316.83 * faktor)
+        return olajsava + (18700.38 * faktor - 1.40427 * skupni_dohodek)
     return olajsava
 }
 
@@ -77,10 +78,26 @@ function olajsava_vzdrzevani_otroci(leto, stevilo_vzdrzevanih_otrok)
     return leto < 2022 ? olajsava : olajsava * faktor_osnove(leto)
 }
 
-function olajsava_vzdrzevani_druzinski_clani(stevilo_vzdrzevanih_druzinskih_clanov)
+function olajsava_vzdrzevani_druzinski_clani(leto, stevilo_vzdrzevanih_druzinskih_clanov)
 {
     // Izračun olajšave glede na število vzdrževanih družinskih članov
-    return stevilo_vzdrzevanih_druzinskih_clanov * 2436.92
+    return stevilo_vzdrzevanih_druzinskih_clanov * 2436.92 * faktor_osnove(leto)
+}
+
+function olajsava_za_invalide(leto)
+{
+    return 17658.84 * faktor_osnove(leto)
+}
+
+function olajsava_za_dodatno_pokojnino(leto, premija_dod_pok_zav, bruto_zasluzek)
+{
+    // Olajšava za prostovoljno dodatno pokojninsko zavarovanje
+    // Največ do zneska premije, ki je enak 24 % obveznih prispevkov za
+    // pokojninsko in invalidsko zavarovanje za zavarovanca
+    // Oziroma 5,844% pokojnine zavarovanca
+    var znesek_olajsava_za_dodatno_pokojnino = Math.min(premija_dod_pok_zav, bruto_zasluzek * 0.221 * 0.24)
+    // Ne več kot 2.819,09 eurov letno.
+    return Math.min(znesek_olajsava_za_dodatno_pokojnino, 2819.09 * faktor_osnove(leto))
 }
 
 function ostale_olajsave(
@@ -95,19 +112,15 @@ function ostale_olajsave(
     var znesek_splosna_olajsava = splosna_olajsava(leto, bruto_zasluzek)
 
     // 2. Osebne olajšave za 100% invalide
-    var znesek_olajsava_za_invalide = invalid ? 17658.84 : 0
+    var znesek_olajsava_za_invalide = invalid ? olajsava_za_invalide(leto) : 0
 
     // 4. za vzdrževane družinske člane
     var olajsava_za_vzdrzevane_druzinske_clane = olajsava_vzdrzevani_druzinski_clani(
+        leto,
         stevilo_vzdrzevanih_druzinskih_clanov) * (stevilo_vzdrzevanih_mesecev/12)
 
     // 5. Olajšava za prostovoljno dodatno pokojninsko zavarovanje
-    // Največ do zneska premije, ki je enak 24 % obveznih prispevkov za
-    // pokojninsko in invalidsko zavarovanje za zavarovanca
-    // Oziroma 5,844% pokojnine zavarovanca
-    var znesek_olajsava_za_dodatno_pokojnino = Math.min(premija_dod_pok_zav, bruto_zasluzek * 0.221 * 0.24)
-    // Ne več kot 2.819,09 eurov letno.
-    znesek_olajsava_za_dodatno_pokojnino = Math.min(znesek_olajsava_za_dodatno_pokojnino, 2819.09)
+    var znesek_olajsava_za_dodatno_pokojnino = olajsava_za_dodatno_pokojnino(leto, premija_dod_pok_zav, bruto_zasluzek)
 
     return znesek_splosna_olajsava + 
            znesek_olajsava_za_invalide + 
@@ -180,6 +193,8 @@ exports.letna_dohodnina = letna_dohodnina
 exports.splosna_olajsava = splosna_olajsava
 exports.olajsava_vzdrzevani_otroci = olajsava_vzdrzevani_otroci
 exports.olajsava_vzdrzevani_druzinski_clani = olajsava_vzdrzevani_druzinski_clani
+exports.olajsava_za_invalide = olajsava_za_invalide
+exports.olajsava_za_dodatno_pokojnino = olajsava_za_dodatno_pokojnino
 exports.ostale_olajsave = ostale_olajsave
 exports.letna_davcna_osnova = letna_davcna_osnova
 exports.izracunaj_dohodnino = izracunaj_dohodnino
