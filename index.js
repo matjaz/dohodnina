@@ -1,201 +1,257 @@
-function letna_dohodnina_razred(leto, neto_letna_davcna_osnova)
-{
-    var faktor = faktor_osnove(leto)
-    if (neto_letna_davcna_osnova <= 8500  * faktor) return 16
-    if (neto_letna_davcna_osnova <= 25000 * faktor) return 26
-    if (neto_letna_davcna_osnova <= 50000 * faktor) return 33
-    if (neto_letna_davcna_osnova <= 72000 * faktor) return 39
-    return leto < 2022 ? 50 : 45
-}
+/**
+ * Knjižnica za izračun dohodnine v Sloveniji (2020-2025)
+ */
 
-function letna_dohodnina(leto, neto_letna_davcna_osnova)
-{
-    // Izračuna letno neto dohodnino glede na lestvico
-    var faktor = faktor_osnove(leto)
-    if (neto_letna_davcna_osnova <= 8500 * faktor)
-        return round(neto_letna_davcna_osnova * .16)
-    if (neto_letna_davcna_osnova <= 25000 * faktor)
-        return round(1360 * faktor + (neto_letna_davcna_osnova - 8500 * faktor) * .26)
-    if (neto_letna_davcna_osnova <= 50000 * faktor)
-        return round(5650 * faktor + (neto_letna_davcna_osnova - 25000 * faktor) * .33)
-    if (neto_letna_davcna_osnova <= 72000 * faktor)
-        return round(13900 * faktor + (neto_letna_davcna_osnova - 50000 * faktor) * .39)
-    return round(22480 * faktor + (neto_letna_davcna_osnova - 72000 * faktor) * (leto < 2022 ? .50 : .45))
-}
+import TAX_BRACKETS from './brackets.js';
+import SOCIAL_CONTRIBUTIONS from './social.js';
+import TAX_RELIEFS from './reliefs.js';
+import WAGES from './wages.js';
 
-function faktor_osnove(leto)
-{
-    return 1 + Math.min(Math.max(leto - 2021, 0), 4) * 0.03
-}
+export class DohodninaCalculator {
+  constructor(year = 2025) {
+    this.year = year;
 
-function splosna_olajsava(leto, skupni_dohodek)
-{
-    // Višina skupne splošne olajšave je odvisna od višine skupnega dohodka v letu
-    var olajsava
-    if (leto <= 2021) {
-        olajsava = 3500
-    } else if (leto == 2022) {
-        olajsava = 4500
-    } else if (leto == 2023) {
-        olajsava = 5500
-    } else if (leto == 2024) {
-        olajsava = 6500
-    } else {
-        olajsava = 7500
+    if (!TAX_BRACKETS[year]) {
+      throw new Error(`Davčna lestvica za leto ${year} ni na voljo`);
     }
-    var faktor = faktor_osnove(leto)
-    if (skupni_dohodek <= 13316.83 * faktor)
-        return olajsava + (18700.38 * faktor - 1.40427 * skupni_dohodek)
-    return olajsava
-}
 
-function olajsava_vzdrzevani_otroci(leto, stevilo_vzdrzevanih_otrok)
-{
-    // Izračun olajšave glede na število vzdrževanih otrok (<18 let)
-    var olajsava = 0
-    if (stevilo_vzdrzevanih_otrok >= 1) {
-        olajsava += 2436.92
-        if (stevilo_vzdrzevanih_otrok >= 2) {
-            olajsava += 2649.24
-            if (stevilo_vzdrzevanih_otrok >= 3) {
-                olajsava += 4418.54
-                if (stevilo_vzdrzevanih_otrok >= 4) {
-                    olajsava += 6187.85
-                    if (stevilo_vzdrzevanih_otrok >= 5) {
-                        olajsava += 7957.14
-                        //  Za vse nadaljnje vzdrževane otroke se višina olajšave poveča za 1.769,30 eura
-                        //  (mesečno za 147,44 eura) glede na višino olajšave za predhodnega vzdrževanega otroka.
-                        var predhodni_otrok = 9726.44 // 7957,14 + 1769,30
-                        for (var i = 6; i <= stevilo_vzdrzevanih_otrok; i++) {
-                            olajsava += predhodni_otrok
-                            predhodni_otrok = predhodni_otrok + 1769.30
-                        }
-                    }
-                }
-            }
-        }
+    this.brackets = TAX_BRACKETS[year];
+    this.reliefs = TAX_RELIEFS[year];
+    this.contributions = SOCIAL_CONTRIBUTIONS[year];
+    this.wages = WAGES[year];
+  }
+
+  /**
+   * Vrne prispevne stopnje (upošteva mesečne spremembe, npr. 2025)
+   */
+  getContributionRates(type, month) {
+    const baseRates = { ...this.contributions[type] };
+
+    // 2025 ima spremembo julija
+    if (this.year === 2025 && month) {
+      const m = Number(month);
+      if (m < 7) {
+        delete baseRates.longTermCare;
+      }
     }
-    return leto < 2022 ? olajsava : olajsava * faktor_osnove(leto)
+    return baseRates;
+  }
+
+  /**
+   * Vrne OZP glede na leto in mesec (2025 ima spremembo marca)
+   */
+  getHealthInsuranceFee(isMonthly, month) {
+    let fee = this.contributions.healthInsuranceFee || 0;
+
+    const beforeMarch = this.contributions.healthInsuranceFeeBeforeMarch;
+    if (beforeMarch && month) {
+      const m = Number(month);
+      if (m < 3) {
+        fee = beforeMarch;
+      }
+    }
+    return isMonthly ? fee : fee * 12;
+  }
+
+  getBracket(taxBase, period = 'annual') {
+    const brackets = period === 'monthly' ? this.brackets.monthly : this.brackets.annual;
+    for (const bracket of brackets) {
+      if (taxBase >= bracket.from && taxBase < bracket.to) {
+        return bracket;
+      }
+    }
+  }
+
+  /**
+   * Izračuna prispevke za socialno varnost
+   */
+  calculateSocialContributions(grossIncome, type = 'employee', month) {
+    const rates = this.getContributionRates(type, month);
+    const contributions = {};
+    let total = 0;
+
+    for (const [key, rate] of Object.entries(rates)) {
+      contributions[key] = round(grossIncome * rate);
+      total += contributions[key];
+    }
+
+    return { ...contributions, total: round(total) };
+  }
+
+  /**
+   * Izračuna dohodnino iz davčne osnove
+   */
+  calculateTax(taxBase, period = 'annual') {
+    const bracket = this.getBracket(taxBase, period);
+    if (bracket) {
+        return round(bracket.fixedTax + (taxBase - bracket.over) * bracket.rate);
+    }
+    return 0;
+  }
+
+  /**
+   * Izračuna splošno olajšavo
+   */
+  calculateGeneralRelief(totalIncome, isMonthly = false) {
+    const relief = this.reliefs.general;
+
+    if (isMonthly) {
+      const annualEstimate = totalIncome * 12;
+      const annualRelief = relief.formula(annualEstimate);
+      return round(annualRelief / 12);
+    }
+
+    return round(relief.formula(totalIncome));
+  }
+
+  /**
+   * Izračuna olajšavo za vzdrževane otroke
+   */
+  calculateChildRelief(numberOfChildren, isMonthly = false) {
+    if (numberOfChildren === 0) return 0;
+
+    const child = this.reliefs.dependentChild;
+    let total = child.first;
+
+    for (let i = 1; i < numberOfChildren; i++) {
+      const previousRelief = i === 1 ? child.first : child.first + (i - 1) * child.increment;
+      total += previousRelief + child.increment;
+    }
+
+    return round(isMonthly ? total / 12 : total);
+  }
+
+  /**
+   * Kompleten izračun dohodnine z vsemi odbitki
+   * POSTOPEK:
+   * 1. Bruto plača
+   * 2. - Prispevki delojemalca (PIZ, ZZ, brezposelnost, starševstvo, DO, OZP)
+   * 3. = Osnova po prispevkih
+   * 4. - Olajšave
+   * 5. = Davčna osnova
+   * 6. × Davčna stopnja = Dohodnina
+   * 7. Neto plača = Bruto - Prispevki - Dohodnina
+   */
+  calculate(grossIncome, options = {}) {
+    const {
+      period = 'annual',
+      month = null,
+      numberOfChildren = 0,
+      isStudent = false,
+      isYoungEmployee = false,
+      dependentFamilyMembers = 0,
+      hasDisability100 = false,
+      isOver70 = false,
+      isVolunteer = false,
+      pensionContribution = 0
+    } = options;
+
+    const isMonthly = period === 'monthly';
+
+    if (month !== null) {
+      const m = Number(month);
+      if (!Number.isInteger(m) || m < 1 || m > 12) {
+        throw new Error(`Parameter "month" mora biti celo število med 1 in 12 (prejeto: ${month})`);
+      }
+    }
+
+    // VALIDACIJA: Preverjanje minimalne plače
+    const minimumWageAnnual = this.wages.min;
+    const minimumWage = isMonthly ? minimumWageAnnual / 12 : minimumWageAnnual;
+
+    if (grossIncome < minimumWage) {
+      const periodText = isMonthly ? 'mesečno' : 'letno';
+      throw new Error(`Bruto plača (${grossIncome.toFixed(2)} € ${periodText}) ne sme biti manjša od minimalne plače za leto ${this.year} (${minimumWage.toFixed(2)} € ${periodText})`);
+    }
+
+    // 1. PRISPEVKI DELOJEMALCA (odštejejo se od bruto plače)
+    const employeeContributions = this.calculateSocialContributions(grossIncome, 'employee', month);
+
+    // 1a. OBVEZNI ZDRAVSTVENI PRISPEVEK (OZP)
+    const healthInsuranceFee = this.getHealthInsuranceFee(isMonthly, month);
+
+    // Dodaj OZP v total prispevkov delojemalca
+    employeeContributions.total = round(employeeContributions.total + healthInsuranceFee);
+
+    // 2. OSNOVA PO PRISPEVKIH (vključuje odbitek vseh prispevkov + OZP)
+    const incomeAfterContributions = grossIncome - employeeContributions.total;
+
+    // 3. OLAJŠAVE
+    const generalRelief = this.calculateGeneralRelief(grossIncome, isMonthly);
+    const childRelief = this.calculateChildRelief(numberOfChildren, isMonthly);
+
+    let totalReliefs = generalRelief + childRelief;
+
+    if (isStudent && this.reliefs.student) {
+      totalReliefs += isMonthly ? this.reliefs.student.annual / 12 : this.reliefs.student.annual;
+    }
+
+    if (isYoungEmployee && this.reliefs.youngEmployee?.annual > 0) {
+      totalReliefs += isMonthly ? this.reliefs.youngEmployee.annual / 12 : this.reliefs.youngEmployee.annual;
+    }
+
+    if (dependentFamilyMembers > 0 && this.reliefs.dependentFamily) {
+      totalReliefs += dependentFamilyMembers * (isMonthly ? this.reliefs.dependentFamily.annual / 12 : this.reliefs.dependentFamily.annual);
+    }
+
+    if (hasDisability100 && this.reliefs.disability100) {
+      totalReliefs += isMonthly ? this.reliefs.disability100.annual / 12 : this.reliefs.disability100.annual;
+    }
+
+    if (isOver70 && this.reliefs.over70) {
+      totalReliefs += isMonthly ? this.reliefs.over70.annual / 12 : this.reliefs.over70.annual;
+    }
+
+    if (isVolunteer && this.reliefs.volunteer) {
+      totalReliefs += isMonthly ? this.reliefs.volunteer.annual / 12 : this.reliefs.volunteer.annual;
+    }
+
+    if (pensionContribution > 0 && this.reliefs.pension) {
+      const maxAmount = isMonthly ? this.reliefs.pension.maxAmount / 12 : this.reliefs.pension.maxAmount;
+      totalReliefs += Math.min(pensionContribution, maxAmount);
+    }
+
+    // 4. DAVČNA OSNOVA
+    const taxBase = round(Math.max(0, incomeAfterContributions - totalReliefs));
+
+    // 5. DOHODNINA (akontacija)
+    const tax = this.calculateTax(taxBase, period);
+
+    // 6. NETO PLAČA (employeeContributions.total že vključuje OZP)
+    const netIncome = round(grossIncome - employeeContributions.total - tax);
+
+    // PRISPEVKI DELODAJALCA
+    const employerContributions = this.calculateSocialContributions(grossIncome, 'employer', month);
+
+    // SKUPNE DAJATVE (država prejme) - employeeContributions.total že vključuje OZP
+    const totalTaxes = round(employeeContributions.total + tax + employerContributions.total);
+
+    return {
+      grossIncome: round(grossIncome),
+      contributions: {
+        employee: employeeContributions,
+        employer: employerContributions,
+        healthInsuranceFee
+      },
+      incomeAfterContributions: round(incomeAfterContributions),
+      reliefs: {
+        general: generalRelief,
+        children: childRelief,
+        total: round(totalReliefs)
+      },
+      taxBase,
+      tax,
+      healthInsuranceFee,
+      netIncome,
+      totalCostForEmployer: round(grossIncome + employerContributions.total),
+      totalTaxes,
+      effectiveRate: round((totalTaxes / (grossIncome + employerContributions.total)) * 100),
+      year: this.year,
+      period
+    };
+  }
 }
 
-function olajsava_vzdrzevani_druzinski_clani(leto, stevilo_vzdrzevanih_druzinskih_clanov)
-{
-    // Izračun olajšave glede na število vzdrževanih družinskih članov
-    return stevilo_vzdrzevanih_druzinskih_clanov * 2436.92 * faktor_osnove(leto)
+export function round(number) {
+  return Math.round(number * 100) / 100
 }
-
-function olajsava_za_invalide(leto)
-{
-    return 17658.84 * faktor_osnove(leto)
-}
-
-function olajsava_za_dodatno_pokojnino(leto, premija_dod_pok_zav, bruto_zasluzek)
-{
-    // Olajšava za prostovoljno dodatno pokojninsko zavarovanje
-    // Največ do zneska premije, ki je enak 24 % obveznih prispevkov za
-    // pokojninsko in invalidsko zavarovanje za zavarovanca
-    // Oziroma 5,844% pokojnine zavarovanca
-    var znesek_olajsava_za_dodatno_pokojnino = Math.min(premija_dod_pok_zav, bruto_zasluzek * 0.221 * 0.24)
-    // Ne več kot 2.819,09 eurov letno.
-    return Math.min(znesek_olajsava_za_dodatno_pokojnino, 2819.09 * faktor_osnove(leto))
-}
-
-function ostale_olajsave(
-    leto,
-    bruto_zasluzek,
-    stevilo_vzdrzevanih_druzinskih_clanov = 0,
-    stevilo_vzdrzevanih_mesecev = 12,
-    premija_dod_pok_zav = 0,
-    invalid = false)
-{
-    // 1. Splošna olajšava
-    var znesek_splosna_olajsava = splosna_olajsava(leto, bruto_zasluzek)
-
-    // 2. Osebne olajšave za 100% invalide
-    var znesek_olajsava_za_invalide = invalid ? olajsava_za_invalide(leto) : 0
-
-    // 4. za vzdrževane družinske člane
-    var olajsava_za_vzdrzevane_druzinske_clane = olajsava_vzdrzevani_druzinski_clani(
-        leto,
-        stevilo_vzdrzevanih_druzinskih_clanov) * (stevilo_vzdrzevanih_mesecev/12)
-
-    // 5. Olajšava za prostovoljno dodatno pokojninsko zavarovanje
-    var znesek_olajsava_za_dodatno_pokojnino = olajsava_za_dodatno_pokojnino(leto, premija_dod_pok_zav, bruto_zasluzek)
-
-    return znesek_splosna_olajsava + 
-           znesek_olajsava_za_invalide + 
-           olajsava_za_vzdrzevane_druzinske_clane +
-           znesek_olajsava_za_dodatno_pokojnino
-}
-
-function letna_davcna_osnova(
-                        leto,
-                        bruto_zasluzek,
-                        stevilo_vzdrzevanih_otrok = 0,
-                        stevilo_vzdrzevanih_druzinskih_clanov = 0,
-                        stevilo_vzdrzevanih_mesecev = 12,
-                        premija_dod_pok_zav = 0,
-                        invalid = false)
-{
-    // =======================
-    // Davčne olajšave (letno)
-    // =======================
-    var znesek_ostale_olajsave = ostale_olajsave(
-        leto,
-        bruto_zasluzek,
-        stevilo_vzdrzevanih_druzinskih_clanov,
-        stevilo_vzdrzevanih_mesecev,
-        premija_dod_pok_zav,
-        invalid
-    )
-
-    var olajsava_za_vzdrzevane_otroke = olajsava_vzdrzevani_otroci(leto, stevilo_vzdrzevanih_otrok) * stevilo_vzdrzevanih_mesecev / 12
-
-    // Prispevki (za pokojninsko in invalidsko zavarovanje)
-    // Zaposleni:  22.1%
-    var prispevki = bruto_zasluzek * 0.221
-    var olajsave = znesek_ostale_olajsave + olajsava_za_vzdrzevane_otroke
-
-    var neto_davcna_osnova = Math.max(bruto_zasluzek - prispevki - olajsave, 0)
-
-    // Stopnja dohodnine (letno)
-    return neto_davcna_osnova
-}
-
-function izracunaj_dohodnino(
-    leto,
-    bruto_zasluzek,
-    stevilo_vzdrzevanih_otrok = 0,
-    stevilo_vzdrzevanih_druzinskih_clanov = 0,
-    stevilo_vzdrzevanih_mesecev = 12,
-    premija_dod_pok_zav = 0,
-    invalid = false
-) {
-    var neto_davcna_osnova = letna_davcna_osnova(
-        leto,
-        bruto_zasluzek,
-        stevilo_vzdrzevanih_otrok,
-        stevilo_vzdrzevanih_druzinskih_clanov,
-        stevilo_vzdrzevanih_mesecev,
-        premija_dod_pok_zav,
-        invalid
-    )
-    return letna_dohodnina(leto, neto_davcna_osnova)
-}
-
-function round(n)
-{
-    return Math.round(n * 100) / 100
-}
-
-exports.letna_dohodnina_razred = letna_dohodnina_razred
-exports.letna_dohodnina = letna_dohodnina
-exports.splosna_olajsava = splosna_olajsava
-exports.olajsava_vzdrzevani_otroci = olajsava_vzdrzevani_otroci
-exports.olajsava_vzdrzevani_druzinski_clani = olajsava_vzdrzevani_druzinski_clani
-exports.olajsava_za_invalide = olajsava_za_invalide
-exports.olajsava_za_dodatno_pokojnino = olajsava_za_dodatno_pokojnino
-exports.ostale_olajsave = ostale_olajsave
-exports.letna_davcna_osnova = letna_davcna_osnova
-exports.izracunaj_dohodnino = izracunaj_dohodnino
-exports.round = round
