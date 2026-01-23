@@ -94,5 +94,21 @@ export default {
       { from: 4514.83, to: 6501.36, fixedTax: 1255.12, rate: 0.39, over: 4514.83 },
       { from: 6501.36, to: Infinity, fixedTax: 2029.87, rate: 0.50, over: 6501.36 }
     ]
+  },
+  2026: {
+    annual: [
+      { from: 0, to: 9721.43, fixedTax: 0, rate: 0.16, over: 0 },
+      { from: 9721.43, to: 28592.44, fixedTax: 1555.43, rate: 0.26, over: 9721.43 },
+      { from: 28592.44, to: 57184.88, fixedTax: 6461.89, rate: 0.33, over: 28592.44 },
+      { from: 57184.88, to: 82346.23, fixedTax: 15897.40, rate: 0.39, over: 57184.88 },
+      { from: 82346.23, to: Infinity, fixedTax: 25710.30, rate: 0.50, over: 82346.23 }
+    ],
+    monthly: [
+      { from: 0, to: 810.12, fixedTax: 0, rate: 0.16, over: 0 },
+      { from: 810.12, to: 2382.70, fixedTax: 129.62, rate: 0.26, over: 810.12 },
+      { from: 2382.70, to: 4765.41, fixedTax: 538.49, rate: 0.33, over: 2382.70 },
+      { from: 4765.41, to: 6862.19, fixedTax: 1324.78, rate: 0.39, over: 4765.41 },
+      { from: 6862.19, to: Infinity, fixedTax: 2142.53, rate: 0.50, over: 6862.19 }
+    ]
   }
 };

@@ -93,5 +93,24 @@ export default {
     },
     healthInsuranceFee: 37.17, // Od marca 2025
     healthInsuranceFeeBeforeMarch: 35.00 // 35 € do 28. 2. 2025
+  },
+  2026: {
+    employee: {
+      pension: 0.155,
+      health: 0.0636,
+      unemployment: 0.0014,
+      parentalCare: 0.001,
+      longTermCare: 0.01
+    },
+    employer: {
+      pension: 0.0885,
+      health: 0.0656,
+      unemployment: 0.0006,
+      parentalCare: 0.001,
+      workInjury: 0.0053,
+      longTermCare: 0.01
+    },
+    healthInsuranceFee: 37.17,
+    healthInsuranceFeeBeforeMarch: 37.17
   }
 };

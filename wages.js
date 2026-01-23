@@ -25,6 +25,10 @@ export default {
   },
   2025: {
     min: 15332.64,     // 1277.72 × 12
-    avg: 29877.12      // 2489.76 × 12
+    avg: 30153.36      // 2512.78 × 12 (SURS povprečje jan-nov 2025)
+  },
+  2026: {
+    min: 17784,        // 1482.00 × 12
+    avg: 31000         // ocena - uradni podatek SURS še ni na voljo
   }
 };

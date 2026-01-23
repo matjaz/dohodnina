@@ -1,7 +1,7 @@
-# Primerjava knjižnice s spletnimi kalkulatorji plač (2020-2025)
+# Primerjava knjižnice s spletnimi kalkulatorji plač (2020-2026)
 
-**Datum primerjave:** December 2025
-**Obdobje:** 2020-2025
+**Datum primerjave:** Januar 2026
+**Obdobje:** 2020-2026
 
 ## Referenčni kalkulatorji
 
@@ -34,8 +34,42 @@ Knjižnica `dohodnina` je bila preverjena s spletnimi kalkulatorji na portalih [
 | **2024** | Uveden OZP 35 €/mesec | **-25,90 €** |
 | **2025 mar** | OZP povišan na 37,17 € | **-2,17 €** |
 | **2025 jul** | Uveden DO 1%, olajšava 5.260 € | **-14,80 €** |
+| **2026** | Min. plača 1.482 €, prispevki enaki | *glej spodaj* |
 
-### 1.2 Sredletne spremembe v 2025
+### 1.2 Podatki za leto 2025
+
+| Parameter | Vrednost | Vir |
+|-----------|----------|-----|
+| **Minimalna plača (bruto)** | 1.277,72 € | Uradno |
+| **Povprečna plača (bruto)** | 2.512,78 € | SURS (povprečje jan-nov 2025) |
+| **Povprečna plača letno** | 30.153,36 € | 2.512,78 × 12 |
+| **Najnižja osnova za prispevke** | 1.436,95 € | 60% povprečne plače |
+| **OZP (od marca 2025)** | 37,17 € | Uskladitev z rastjo plač |
+
+### 1.3 Podatki za leto 2026
+
+| Parameter | Vrednost | Opomba |
+|-----------|----------|--------|
+| **Minimalna plača (bruto)** | 1.482,00 € | Uradno objavljeno 22.1.2026 (+16%) |
+| **Minimalna plača (neto)** | ~1.000 € | Prvič čez 1.000 € neto |
+| **Povprečna plača** | *ni uradnega podatka* | SURS še ni objavil letnega povprečja 2026 |
+| **OZP (mesečno)** | 37,17 € | Velja do 28.2.2026, nato uskladitev |
+
+### 1.4 Obvezni zdravstveni prispevek (OZP)
+
+OZP se **uskladi enkrat letno, 1. marca**, z rastjo povprečne bruto plače v RS v preteklem letu po podatkih SURS.
+
+**Formula:** OZP se določi na podlagi povprečne plače, vendar se ne izračunava kot odstotek, ampak kot fiksni znesek, ki se usklajuje z rastjo plač.
+
+| Obdobje | OZP | Osnova za uskladitev |
+|---------|-----|----------------------|
+| Jan 2024 - Feb 2025 | 35,00 € | Uvedba OZP |
+| Mar 2025 - Feb 2026 | 37,17 € | Rast povprečne plače 2024 |
+| Mar 2026 - Feb 2027 | *še ni znano* | Rast povprečne plače 2025 |
+
+> **Vir:** [ZZZS - Obvezni zdravstveni prispevek](https://zavezanec.zzzs.si/prispevki-za-obvezno-zdravstveno-zavarovanje/obvezni-zdravstveni-prispevek/)
+
+### 1.5 Srednjeletne spremembe v 2025
 
 ```
 ┌────────────────────┬─────────────┬──────────────────┬──────────────────┐
@@ -109,19 +143,43 @@ Knjižnica `dohodnina` je bila preverjena s spletnimi kalkulatorji na portalih [
 
 > ⚠️ V letu 2022 je bila najvišja stopnja **začasno znižana na 45%**!
 
-### 3.3 Davčna lestvica 2023-2025
+### 3.3 Davčna lestvica 2023-2024
 
 | Razred | Davčna osnova (mesečno) | Stopnja | Fiksni davek |
 |--------|-------------------------|---------|--------------|
-| 1. | 0 – 751,50 € | 16% | 0 € |
-| 2. | 751,50 – 2.210,42 € | 26% | 120,24 € |
-| 3. | 2.210,42 – 4.420,83 € | 33% | 499,56 € |
-| 4. | 4.420,83 – 6.362,50 € | 39% | 1.228,00 € |
-| 5. | nad 6.362,50 € | **50%** | 1.985,25 € |
+| 1. | 0 – 729,58 € | 16% | 0 € |
+| 2. | 729,58 – 2.145,83 € | 26% | 116,73 € |
+| 3. | 2.145,83 – 4.291,67 € | 33% | 484,96 € |
+| 4. | 4.291,67 – 6.180,00 € | 39% | 1.193,08 € |
+| 5. | nad 6.180,00 € | **50%** | 1.929,53 € |
 
-**Splošna olajšava:**
-- 2023-2024: 5.000 €/leto (416,67 €/mesec)
-- 2025: 5.260 €/leto (438,33 €/mesec)
+**Splošna olajšava:** 5.000 €/leto (416,67 €/mesec)
+
+### 3.4 Davčna lestvica 2025
+
+| Razred | Davčna osnova (mesečno) | Stopnja | Fiksni davek |
+|--------|-------------------------|---------|--------------|
+| 1. | 0 – 767,52 € | 16% | 0 € |
+| 2. | 767,52 – 2.257,42 € | 26% | 122,80 € |
+| 3. | 2.257,42 – 4.514,83 € | 33% | 510,18 € |
+| 4. | 4.514,83 – 6.501,36 € | 39% | 1.255,12 € |
+| 5. | nad 6.501,36 € | **50%** | 2.029,87 € |
+
+**Splošna olajšava:** 5.260 €/leto (438,33 €/mesec)
+
+### 3.5 Davčna lestvica 2026
+
+| Razred | Davčna osnova (mesečno) | Stopnja | Fiksni davek |
+|--------|-------------------------|---------|--------------|
+| 1. | 0 – 810,12 € | 16% | 0 € |
+| 2. | 810,12 – 2.382,70 € | 26% | 129,62 € |
+| 3. | 2.382,70 – 4.765,41 € | 33% | 538,49 € |
+| 4. | 4.765,41 – 6.862,19 € | 39% | 1.324,78 € |
+| 5. | nad 6.862,19 € | **50%** | 2.142,53 € |
+
+**Splošna olajšava:** 5.551,93 €/leto (462,66 €/mesec)
+
+> Uskladitev za 5,55% (75% rasti povprečne plače za junij 2025)
 
 **Status:** ✅ Vse davčne lestvice se ujemajo
 
@@ -236,25 +294,73 @@ Knjižnica `dohodnina` je bila preverjena s spletnimi kalkulatorji na portalih [
 
 ### ✅ Pravilno implementirano za vsa leta
 
-| Komponenta | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 |
-|------------|:----:|:----:|:----:|:----:|:----:|:----:|
-| Prispevki delojemalca | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Prispevki delodajalca | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Poškodbe pri delu | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Davčna lestvica | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Splošna olajšava | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Olajšave za otroke | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| OZP | - | - | - | - | ✅ | ✅ |
-| DO | - | - | - | - | - | ✅ |
-| Srednjeletne spremembe | - | - | - | - | - | ✅ |
+| Komponenta | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 |
+|------------|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+| Prispevki delojemalca | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Prispevki delodajalca | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Poškodbe pri delu | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Davčna lestvica | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Splošna olajšava | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Olajšave za otroke | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| OZP | - | - | - | - | ✅ | ✅ | ✅ |
+| DO | - | - | - | - | - | ✅ | ✅ |
+| Srednjeletne spremembe | - | - | - | - | - | ✅ | - |
 
 
 
 ---
 
-## 8. Zaključek
+## 8. Leto 2026
 
-**Knjižnica pravilno izračunava VSE komponente plač za obdobje 2020-2025:**
+### 8.1 Minimalna plača 2026
+
+| Parameter | Vrednost |
+|-----------|----------|
+| Bruto mesečna | **1.482,00 €** |
+| Bruto letna | **17.784,00 €** |
+| Neto (približno) | **~1.000 €** |
+| Dvig glede na 2025 | **+16%** (204,28 €) |
+
+### 8.2 Povprečna plača 2026
+
+**Uradni podatek SURS za leto 2026 še ni na voljo.** V knjižnici uporabljamo oceno:
+- Ocena: ~2.583,33 € bruto mesečno (~31.000 € letno)
+
+### 8.3 Obvezni zdravstveni prispevek (OZP)
+
+OZP se izračunava iz povprečne bruto plače preteklega leta. Za leto 2026 je OZP trenutno nastavljen na 37,17 € (enako kot 2025). Nova uskladitev bo 1. marca 2026.
+
+### 8.4 Prispevne stopnje 2026
+
+Prispevne stopnje ostajajo enake kot v drugi polovici 2025:
+- Delojemalec: 23,10% (vključno z 1% DO)
+- Delodajalec: 17,10% (vključno z 1% DO)
+
+### 8.5 Olajšave 2026
+
+Uskladitev za 5,55% (75% rasti povprečne plače za junij 2025).
+
+| Olajšava | Letni znesek | Mesečni znesek |
+|----------|--------------|----------------|
+| **Splošna olajšava (base)** | 5.551,93 € | 462,66 € |
+| Splošna olajšava threshold | 17.766,18 € | - |
+| Študent | 3.886,35 € | 323,86 € |
+| Mladi do 29 let | 1.443,50 € | 120,29 € |
+| 1. otrok | 2.995,83 € | 249,65 € |
+| Vsak naslednji otrok + | 2.175,25 € | 181,27 € |
+| Vzdrževani član | 2.995,83 € | 249,65 € |
+| Invalid 100% | 20.196,38 € | 1.683,03 € |
+| Starejši od 70 let | 1.665,58 € | 138,80 € |
+| Prostovoljec | 1.665,58 € | 138,80 € |
+| Pokojnina (max) | 3.224,18 € | - |
+
+> **Vir:** [FIN-RA-S - Lestvica za odmero dohodnine 2026](https://www.finras.si/lestvica-za-odmero-dohodnine-in-olajsave-za-leto-2026/)
+
+---
+
+## 9. Zaključek
+
+**Knjižnica pravilno izračunava VSE komponente plač za obdobje 2020-2026:**
 
 - ✅ Prispevke delojemalca in delodajalca
 - ✅ OZP (obvezni zdravstveni prispevek) od 2024
@@ -262,6 +368,7 @@ Knjižnica `dohodnina` je bila preverjena s spletnimi kalkulatorji na portalih [
 - ✅ Prispevek za poškodbe pri delu
 - ✅ Vse srednjeletne spremembe za 2025
 - ✅ Davčne lestvice in olajšave za vsa leta
+- ⚠️ Povprečna plača 2026: uporabljena ocena (uradni podatek še ni na voljo)
 
 **Vsi izračuni se popolnoma ujemajo s spletnimi kalkulatorji:**
 - ✅ [Racunovodja.com](https://www.racunovodja.com/Izracuni/Placa)
@@ -269,7 +376,7 @@ Knjižnica `dohodnina` je bila preverjena s spletnimi kalkulatorji na portalih [
 
 ---
 
-## 9. Viri
+## 10. Viri
 
 - [Kalkulator plač 2020 - Racunovodja.com](https://www.racunovodja.com/izracuni/place2020/)
 - [Kalkulator plač 2021 - Racunovodja.com](https://www.racunovodja.com/izracuni/place2021/)
@@ -280,8 +387,12 @@ Knjižnica `dohodnina` je bila preverjena s spletnimi kalkulatorji na portalih [
 - Zakon o prispevkih za socialno varnost (ZPSSV)
 - Zakon o dolgotrajni oskrbi (ZDOsk)
 - Pravilnik o davčnem obračunu akontacije dohodnine
+- [24ur.com - Minimalna plača 2026](https://www.24ur.com/novice/slovenija/minimalna-placa-v-letu-2026-za-16-odstotkov-visja.html)
+- [SURS - Statistični urad RS](https://www.stat.si/statweb/Field/Index/15/74)
+- [FIN-RA-S - Lestvica za odmero dohodnine 2026](https://www.finras.si/lestvica-za-odmero-dohodnine-in-olajsave-za-leto-2026/)
+- [Zveza RFR - Aktualni podatki](https://www.zvezarfr.si/pripomocki/aktualni-podatki)
 
 ---
 
-*Zadnja posodobitev: December 2025*
+*Zadnja posodobitev: Januar 2026*
 

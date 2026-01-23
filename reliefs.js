@@ -121,5 +121,28 @@ export default {
     over70: { annual: 1578.00 },
     volunteer: { annual: 1578.00 },
     pension: { maxAmount: 3054.65 }
+  },
+  2026: {
+    general: {
+      base: 5551.93,
+      threshold: 17766.18,
+      formula: (income) => {
+        if (income <= 17766.18) {
+          return 5551.93 + (20832.39 - 1.17259 * income);
+        }
+        return 5551.93;
+      }
+    },
+    student: { annual: 3886.35 },
+    youngEmployee: { annual: 1443.50 },
+    dependentChild: {
+      first: 2995.83,
+      increment: 2175.25
+    },
+    dependentFamily: { annual: 2995.83 },
+    disability100: { annual: 20196.38 },
+    over70: { annual: 1665.58 },
+    volunteer: { annual: 1665.58 },
+    pension: { maxAmount: 3224.18 }
   }
 };
