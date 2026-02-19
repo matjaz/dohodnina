@@ -110,7 +110,7 @@ export default {
       workInjury: 0.0053,
       longTermCare: 0.01
     },
-    healthInsuranceFee: 37.17,
-    healthInsuranceFeeBeforeMarch: 37.17
+    healthInsuranceFee: 39.36, // Od marca 2026 (+5,9% rast povprečne bruto plače 2025)
+    healthInsuranceFeeBeforeMarch: 37.17 // 37,17 € do 28. 2. 2026
   }
 };

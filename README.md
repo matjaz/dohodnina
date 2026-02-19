@@ -1,6 +1,6 @@
 # Izračun dohodnine za Slovenijo
 
-Knjižnica za izračun dohodnine in neto plače v Sloveniji (2020-2025). Vključuje tudi podatke o minimalni in povprečni plači.
+Knjižnica za izračun dohodnine in neto plače v Sloveniji (2020-2026). Vključuje tudi podatke o minimalni in povprečni plači.
 
 Uporablja se na spletni strani [placam.si](https://placam.si), kjer je vizualno prikazana porazdelitev stroškov dela.
 
@@ -47,7 +47,7 @@ console.log('Prispevki:', result.contributions.employee.total.toFixed(2), '€')
 
 ## Funkcionalnosti
 
-- ✅ Izračun dohodnine za leta 2020-2025
+- ✅ Izračun dohodnine za leta 2020-2026
 - ✅ Mesečni in letni izračun
 - ✅ Prispevki delojemalca in delodajalca
 - ✅ **Obvezni zdravstveni prispevek (OZP)** - od 2024
@@ -69,6 +69,7 @@ Od julija 2025 se je uvedel nov prispevek:
 Od marca 2025 se je OZP povišal:
 - **2024:** 35,00 €/mesec
 - **2025:** 37,17 €/mesec
+- **2026 (od marca):** 39,36 €/mesec (+5,9%)
 
 **POMEMBNO:** OZP se odšteje PRED izračunom davčne osnove, kar zmanjša dohodnino.
 
@@ -234,7 +235,7 @@ Vsi izračuni so usklajeni z:
 - Pravilnikom FURS
 - Uradnim listom Republike Slovenije (spremembe prispevkov)
 
-**Datum zadnje posodobitve:** December 2025
+**Datum zadnje posodobitve:** Februar 2026
 
 ## Viri
 
