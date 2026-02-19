@@ -25,10 +25,10 @@ export default {
   },
   2025: {
     min: 15332.64,     // 1277.72 × 12
-    avg: 30153.36      // 2512.78 × 12 (SURS povprečje jan-nov 2025)
+    avg: 30432.36      // 2536.03 × 12 (SURS uradno letno povprečje 2025, vir: stat.si/statweb/News/Index/14161)
   },
   2026: {
-    min: 17784,        // 1482.00 × 12
-    avg: 31000         // ocena - uradni podatek SURS še ni na voljo
+    min: 17782.56,     // 1481.88 × 12 (RFR, uradno objavljeno)
+    avg: 30432.36      // prevzeta 2025 vrednost - uradni podatek SURS za 2026 še ni na voljo
   }
 };

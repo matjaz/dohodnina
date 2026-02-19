@@ -52,7 +52,7 @@ Knjižnica `dohodnina` je bila preverjena s spletnimi kalkulatorji na portalih [
 |-----------|----------|--------|
 | **Minimalna plača (bruto)** | 1.482,00 € | Uradno objavljeno 22.1.2026 (+16%) |
 | **Minimalna plača (neto)** | ~1.000 € | Prvič čez 1.000 € neto |
-| **Povprečna plača** | *ni uradnega podatka* | SURS še ni objavil letnega povprečja 2026 |
+| **Povprečna plača (2025)** | 2.536,03 € | SURS uradno letno povprečje 2025 |
 | **OZP (mesečno)** | 39,36 € | Od 1. marca 2026 (+5,9% rast povprečne bruto plače 2025) |
 
 ### 1.4 Obvezni zdravstveni prispevek (OZP)
