@@ -27,8 +27,8 @@ describe('osnovna dohodnina', () => {
 
     test('2025', () => {
         const calc = new DohodninaCalculator(2025)
-        expect(calc.calculate(16000).tax).toBe(899.59)
-        expect(calc.calculate(24000).tax).toBe(2393.96)
+        expect(calc.calculate(16000).tax).toBe(913.08)
+        expect(calc.calculate(24000).tax).toBe(2426.29)
     })
 })
 
@@ -59,8 +59,8 @@ describe('dohodnina 1 otrok', () => {
 
     test('2025', () => {
         const calc = new DohodninaCalculator(2025)
-        expect(calc.calculate(16000, { numberOfChildren: 1 }).tax).toBe(445.46)
-        expect(calc.calculate(24000, { numberOfChildren: 1 }).tax).toBe(1656.00)
+        expect(calc.calculate(16000, { numberOfChildren: 1 }).tax).toBe(458.95)
+        expect(calc.calculate(24000, { numberOfChildren: 1 }).tax).toBe(1688.33)
     })
 })
 

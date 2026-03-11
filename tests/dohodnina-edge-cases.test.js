@@ -29,8 +29,8 @@ describe('robni primeri, minimalna plača in posebni scenariji', () => {
 
         test('minimalna plača letno 2025 (15332.64 EUR)', () => {
             const result = calc.calculate(15332.64);
-            expect(result.tax).toBe(692.27);
-            expect(result.netIncome).toBe(10652.48);
+            expect(result.tax).toBe(705.23);
+            expect(result.netIncome).toBe(10720.53);
         });
 
         test('blizu minimalne plače (1300 EUR mesečno)', () => {

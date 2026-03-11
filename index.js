@@ -24,14 +24,16 @@ export class DohodninaCalculator {
   /**
    * Vrne prispevne stopnje (upošteva mesečne spremembe, npr. 2025)
    */
-  getContributionRates(type, month) {
+  getContributionRates(type, month, isAnnual = false) {
     const baseRates = { ...this.contributions[type] };
 
     // 2025 ima spremembo julija
-    if (this.year === 2025 && month) {
-      const m = Number(month);
-      if (m < 7) {
-        delete baseRates.longTermCare;
+    if (this.year === 2025) {
+      if (month) {
+        if (Number(month) < 7) delete baseRates.longTermCare;
+      } else if (isAnnual) {
+        // Letni izračun: dolgotrajna oskrba velja 6/12 mesecev (jul–dec)
+        if (baseRates.longTermCare) baseRates.longTermCare *= 0.5;
       }
     }
     return baseRates;
@@ -50,7 +52,9 @@ export class DohodninaCalculator {
         fee = beforeMarch;
       }
     }
-    return isMonthly ? fee : fee * 12;
+    if (isMonthly) return fee;
+    // Letni izračun: jan–feb po stari tarifi, mar–dec po novi
+    return beforeMarch ? (2 * beforeMarch + 10 * fee) : fee * 12;
   }
 
   getBracket(taxBase, period = 'annual') {
@@ -65,8 +69,8 @@ export class DohodninaCalculator {
   /**
    * Izračuna prispevke za socialno varnost
    */
-  calculateSocialContributions(grossIncome, type = 'employee', month) {
-    const rates = this.getContributionRates(type, month);
+  calculateSocialContributions(grossIncome, type = 'employee', month, isAnnual = false) {
+    const rates = this.getContributionRates(type, month, isAnnual);
     const contributions = {};
     let total = 0;
 
@@ -165,7 +169,7 @@ export class DohodninaCalculator {
     }
 
     // 1. PRISPEVKI DELOJEMALCA (odštejejo se od bruto plače)
-    const employeeContributions = this.calculateSocialContributions(grossIncome, 'employee', month);
+    const employeeContributions = this.calculateSocialContributions(grossIncome, 'employee', month, !isMonthly);
 
     // 1a. OBVEZNI ZDRAVSTVENI PRISPEVEK (OZP)
     const healthInsuranceFee = this.getHealthInsuranceFee(isMonthly, month);
@@ -221,7 +225,7 @@ export class DohodninaCalculator {
     const netIncome = round(grossIncome - employeeContributions.total - tax);
 
     // PRISPEVKI DELODAJALCA
-    const employerContributions = this.calculateSocialContributions(grossIncome, 'employer', month);
+    const employerContributions = this.calculateSocialContributions(grossIncome, 'employer', month, !isMonthly);
 
     // SKUPNE DAJATVE (država prejme) - employeeContributions.total že vključuje OZP
     const totalTaxes = round(employeeContributions.total + tax + employerContributions.total);

@@ -69,14 +69,14 @@ describe('letni izračuni brez otrok', () => {
             { gross: 100000, tax: 22499.20, description: 'nad mejo 5. razreda' }
         ],
         2025: [
-            { gross: 16000, tax: 899.59, description: 'nizek-srednji dohodek' },
-            { gross: 18000, tax: 1301.75, description: 'srednji dohodek' },
-            { gross: 18000, tax: 1301.75, description: 'srednji dohodek' },
-            { gross: 24000, tax: 2393.96, description: 'srednje-visok dohodek' },
-            { gross: 36000, tax: 4793.24, description: 'visok dohodek' },
-            { gross: 48000, tax: 7480.71, description: 'zelo visok dohodek' },
-            { gross: 72000, tax: 13571.19, description: 'na meji 5. razreda' },
-            { gross: 100000, tax: 21697.70, description: 'nad mejo 5. razreda' }
+            { gross: 16000, tax: 913.08, description: 'nizek-srednji dohodek' },
+            { gross: 18000, tax: 1316.85, description: 'srednji dohodek' },
+            { gross: 18000, tax: 1316.85, description: 'srednji dohodek' },
+            { gross: 24000, tax: 2426.29, description: 'srednje-visok dohodek' },
+            { gross: 36000, tax: 4841.17, description: 'visok dohodek' },
+            { gross: 48000, tax: 7561.34, description: 'zelo visok dohodek' },
+            { gross: 72000, tax: 13691.42, description: 'na meji 5. razreda' },
+            { gross: 100000, tax: 21894.40, description: 'nad mejo 5. razreda' }
         ]
     };
 
@@ -171,16 +171,16 @@ describe('letni izračuni z otroki', () => {
         },
         2025: {
             24000: [
-                { children: 0, tax: 2393.96 },
-                { children: 1, tax: 1656.00 },
-                { children: 2, tax: 802.00 },
+                { children: 0, tax: 2426.29 },
+                { children: 1, tax: 1688.33 },
+                { children: 2, tax: 821.89 },
                 { children: 3, tax: 0 }
             ],
             36000: [
-                { children: 0, tax: 4793.24 },
-                { children: 1, tax: 4055.28 },
-                { children: 2, tax: 2781.50 },
-                { children: 3, tax: 1164.87 }
+                { children: 0, tax: 4841.17 },
+                { children: 1, tax: 4103.21 },
+                { children: 2, tax: 2829.43 },
+                { children: 3, tax: 1194.37 }
             ]
         }
     };
@@ -645,27 +645,27 @@ describe('mejne vrednosti davčnih razredov', () => {
 
         test('pod prvo mejo (16000 EUR)', () => {
             const result = calc.calculate(16000);
-            expect(result.tax).toBe(899.59);
+            expect(result.tax).toBe(913.08);
         });
 
         test('na prvi meji (27089 EUR)', () => {
             const result = calc.calculate(27089);
-            expect(result.tax).toBe(3011.58);
+            expect(result.tax).toBe(3047.92);
         });
 
         test('na drugi meji (54178 EUR)', () => {
             const result = calc.calculate(54178);
-            expect(result.tax).toBe(9048.50);
+            expect(result.tax).toBe(9139.32);
         });
 
         test('pod tretjo mejo (78016 EUR)', () => {
             const result = calc.calculate(78016);
-            expect(result.tax).toBe(15104.48);
+            expect(result.tax).toBe(15258.31);
         });
 
         test('nad tretjo mejo (78017 EUR)', () => {
             const result = calc.calculate(78017);
-            expect(result.tax).toBe(15104.78);
+            expect(result.tax).toBe(15258.61);
         });
     });
 
@@ -736,9 +736,9 @@ describe('najvišja davčna stopnja', () => {
     test('2025 - najvišja stopnja 50%', () => {
         const calc = new DohodninaCalculator(2025);
         const result = calc.calculate(100000);
-        expect(result.tax).toBe(21697.70);
+        expect(result.tax).toBe(21894.40);
         // Efektivna stopnja upošteva strošek delodajalca
-        expect(result.effectiveRate).toBe(53.24);
+        expect(result.effectiveRate).toBe(52.78);
     });
 });
 
@@ -777,7 +777,7 @@ describe('efektivna davčna stopnja', () => {
         { year: 2022, gross: 24000, expectedRate: 43.01 },
         { year: 2023, gross: 24000, expectedRate: 42.54 },
         { year: 2024, gross: 24000, expectedRate: 43.66 },
-        { year: 2025, gross: 24000, expectedRate: 44.43 }
+        { year: 2025, gross: 24000, expectedRate: 43.87 }
     ];
 
     testCases.forEach(({ year, gross, expectedRate }) => {
