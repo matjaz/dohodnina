@@ -101,7 +101,7 @@ export default {
       { from: 9721.43, to: 28592.44, fixedTax: 1555.43, rate: 0.26, over: 9721.43 },
       { from: 28592.44, to: 57184.88, fixedTax: 6461.89, rate: 0.33, over: 28592.44 },
       { from: 57184.88, to: 82346.23, fixedTax: 15897.40, rate: 0.39, over: 57184.88 },
-      { from: 82346.23, to: Infinity, fixedTax: 25710.30, rate: 0.50, over: 82346.23 }
+      { from: 82346.23, to: Infinity, fixedTax: 25710.33, rate: 0.50, over: 82346.23 }
     ],
     monthly: [
       { from: 0, to: 810.12, fixedTax: 0, rate: 0.16, over: 0 },
