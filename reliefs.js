@@ -42,10 +42,10 @@ export default {
   2022: {
     general: {
       base: 4500.00,
-      threshold: 15243.06,
+      threshold: 13716.33,
       formula: (income) => {
-        if (income <= 15243.06) {
-          return 4500.00 + (18188.61 - 1.19329 * income);
+        if (income <= 13716.33) {
+          return 4500.00 + (19261.43 - 1.40427 * income);
         }
         return 4500.00;
       }
