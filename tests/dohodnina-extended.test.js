@@ -49,7 +49,7 @@ describe('letni izračuni brez otrok', () => {
             { gross: 100000, tax: 22858.00, description: 'nad mejo 5. razreda (45%)' }
         ],
         2023: [
-            { gross: 16000, tax: 1194.24, description: 'nizek-srednji dohodek' },
+            { gross: 16000, tax: 1194.25, description: 'nizek-srednji dohodek' },
             { gross: 18000, tax: 1470.22, description: 'srednji dohodek' },
             { gross: 18000, tax: 1470.22, description: 'srednji dohodek' },
             { gross: 24000, tax: 2685.46, description: 'srednje-visok dohodek' },
@@ -59,7 +59,7 @@ describe('letni izračuni brez otrok', () => {
             { gross: 100000, tax: 22663.00, description: 'nad mejo 5. razreda (50%)' }
         ],
         2024: [
-            { gross: 16000, tax: 1127.04, description: 'nizek-srednji dohodek' },
+            { gross: 16000, tax: 1127.05, description: 'nizek-srednji dohodek' },
             { gross: 18000, tax: 1376.32, description: 'srednji dohodek' },
             { gross: 18000, tax: 1376.32, description: 'srednji dohodek' },
             { gross: 24000, tax: 2576.26, description: 'srednje-visok dohodek' },
@@ -102,85 +102,85 @@ describe('letni izračuni z otroki', () => {
         2020: {
             24000: [
                 { children: 0, tax: 3100.96 },
-                { children: 1, tax: 2477.52 },
-                { children: 2, tax: 1394.07 },
-                { children: 3, tax: 431.14 }
+                { children: 1, tax: 2467.36 },
+                { children: 2, tax: 1778.56 },
+                { children: 3, tax: 910.61 }
             ],
             36000: [
                 { children: 0, tax: 5531.44 },
-                { children: 1, tax: 4908.00 },
-                { children: 2, tax: 3824.55 },
-                { children: 3, tax: 2281.08 }
+                { children: 1, tax: 4897.84 },
+                { children: 2, tax: 4209.04 },
+                { children: 3, tax: 3060.22 }
             ]
         },
         2021: {
             24000: [
                 { children: 0, tax: 3100.96 },
-                { children: 1, tax: 2477.52 },
-                { children: 2, tax: 1394.07 },
-                { children: 3, tax: 431.14 }
+                { children: 1, tax: 2467.36 },
+                { children: 2, tax: 1778.56 },
+                { children: 3, tax: 910.61 }
             ],
             36000: [
                 { children: 0, tax: 5531.44 },
-                { children: 1, tax: 4908.00 },
-                { children: 2, tax: 3824.55 },
-                { children: 3, tax: 2281.08 }
+                { children: 1, tax: 4897.84 },
+                { children: 2, tax: 4209.04 },
+                { children: 3, tax: 3060.22 }
             ]
         },
         2022: {
             24000: [
                 { children: 0, tax: 2815.46 },
-                { children: 1, tax: 2175.71 },
-                { children: 2, tax: 1192.40 },
-                { children: 3, tax: 215.55 }
+                { children: 1, tax: 2162.85 },
+                { children: 2, tax: 1453.39 },
+                { children: 3, tax: 704.98 }
             ],
             36000: [
                 { children: 0, tax: 5245.94 },
-                { children: 1, tax: 4606.19 },
-                { children: 2, tax: 3492.63 },
-                { children: 3, tax: 1905.25 }
+                { children: 1, tax: 4593.33 },
+                { children: 2, tax: 3883.87 },
+                { children: 3, tax: 2700.58 }
             ]
         },
         2023: {
             24000: [
                 { children: 0, tax: 2685.46 },
-                { children: 1, tax: 1983.14 },
-                { children: 2, tax: 1013.53 },
-                { children: 3, tax: 0 }
+                { children: 1, tax: 1983.98 },
+                { children: 2, tax: 1290.40 },
+                { children: 3, tax: 507.68 }
             ],
             36000: [
                 { children: 0, tax: 5115.94 },
-                { children: 1, tax: 4413.62 },
-                { children: 2, tax: 3201.96 },
-                { children: 3, tax: 1480.96 }
+                { children: 1, tax: 4414.46 },
+                { children: 2, tax: 3651.88 },
+                { children: 3, tax: 2379.96 }
             ]
         },
         2024: {
             24000: [
                 { children: 0, tax: 2576.26 },
-                { children: 1, tax: 1873.94 },
-                { children: 2, tax: 946.33 },
-                { children: 3, tax: 0 }
+                { children: 1, tax: 1874.78 },
+                { children: 2, tax: 1223.20 },
+                { children: 3, tax: 440.48 }
             ],
             36000: [
                 { children: 0, tax: 5006.74 },
-                { children: 1, tax: 4304.42 },
-                { children: 2, tax: 3092.76 },
-                { children: 3, tax: 1382.93 }
+                { children: 1, tax: 4305.26 },
+                { children: 2, tax: 3542.68 },
+                { children: 3, tax: 2270.76 }
             ]
         },
         2025: {
             24000: [
                 { children: 0, tax: 2426.29 },
                 { children: 1, tax: 1688.33 },
-                { children: 2, tax: 821.89 },
-                { children: 3, tax: 0 }
+                { children: 2, tax: 1112.08 },
+                { children: 3, tax: 288.65 }
             ],
             36000: [
                 { children: 0, tax: 4841.17 },
                 { children: 1, tax: 4103.21 },
-                { children: 2, tax: 2829.43 },
-                { children: 3, tax: 1194.37 }
+                { children: 2, tax: 3300.98 },
+                { children: 3, tax: 1962.92 }
             ]
         }
     };
@@ -277,18 +277,18 @@ describe('mesečni izračuni 2025', () => {
 
         test('2000 EUR z 2 otrokoma', () => {
             const result = calc.calculate(2000, { period: 'monthly', numberOfChildren: 2 });
-            expect(result.reliefs.children).toBe(644.79);
-            expect(result.taxBase).toBe(417.71);
-            expect(result.tax).toBe(66.83);
-            expect(result.netIncome).toBe(1434.00);
+            expect(result.reliefs.children).toBe(493.66);
+            expect(result.taxBase).toBe(568.84);
+            expect(result.tax).toBe(91.01);
+            expect(result.netIncome).toBe(1409.82);
         });
 
         test('2000 EUR z 3 otroki', () => {
             const result = calc.calculate(2000, { period: 'monthly', numberOfChildren: 3 });
-            expect(result.reliefs.children).toBe(1224.79);
-            expect(result.taxBase).toBe(0);
-            expect(result.tax).toBe(0);
-            expect(result.netIncome).toBe(1500.83);
+            expect(result.reliefs.children).toBe(922.53);
+            expect(result.taxBase).toBe(139.97);
+            expect(result.tax).toBe(22.40);
+            expect(result.netIncome).toBe(1478.43);
         });
     });
 
@@ -453,19 +453,19 @@ describe('olajšave za otroke - letno', () => {
         });
 
         test('2 otroka', () => {
-            expect(calc.calculateChildRelief(2, false)).toBe(7737.47);
+            expect(calc.calculateChildRelief(2, false)).toBe(5923.82);
         });
 
         test('3 otroci', () => {
-            expect(calc.calculateChildRelief(3, false)).toBe(14697.51);
+            expect(calc.calculateChildRelief(3, false)).toBe(11070.21);
         });
 
         test('4 otroci', () => {
-            expect(calc.calculateChildRelief(4, false)).toBe(23718.42);
+            expect(calc.calculateChildRelief(4, false)).toBe(18277.47);
         });
 
         test('5 otrok', () => {
-            expect(calc.calculateChildRelief(5, false)).toBe(34800.2);
+            expect(calc.calculateChildRelief(5, false)).toBe(27545.59);
         });
     });
 
@@ -473,15 +473,15 @@ describe('olajšave za otroke - letno', () => {
         const calc = new DohodninaCalculator(2024);
 
         test('1 otrok', () => {
-            expect(calc.calculateChildRelief(1, false)).toBe(2701.23);
+            expect(calc.calculateChildRelief(1, false)).toBe(2698.00);
         });
 
         test('2 otroka', () => {
-            expect(calc.calculateChildRelief(2, false)).toBe(7361.46);
+            expect(calc.calculateChildRelief(2, false)).toBe(5631.00);
         });
 
         test('3 otroci', () => {
-            expect(calc.calculateChildRelief(3, false)).toBe(13980.69);
+            expect(calc.calculateChildRelief(3, false)).toBe(10523.00);
         });
     });
 
@@ -489,15 +489,15 @@ describe('olajšave za otroke - letno', () => {
         const calc = new DohodninaCalculator(2023);
 
         test('1 otrok', () => {
-            expect(calc.calculateChildRelief(1, false)).toBe(2701.23);
+            expect(calc.calculateChildRelief(1, false)).toBe(2698.00);
         });
 
         test('2 otroka', () => {
-            expect(calc.calculateChildRelief(2, false)).toBe(7361.46);
+            expect(calc.calculateChildRelief(2, false)).toBe(5631.00);
         });
 
         test('3 otroci', () => {
-            expect(calc.calculateChildRelief(3, false)).toBe(13980.69);
+            expect(calc.calculateChildRelief(3, false)).toBe(10523.00);
         });
     });
 
@@ -505,15 +505,15 @@ describe('olajšave za otroke - letno', () => {
         const calc = new DohodninaCalculator(2021);
 
         test('1 otrok', () => {
-            expect(calc.calculateChildRelief(1, false)).toBe(2397.83);
+            expect(calc.calculateChildRelief(1, false)).toBe(2436.92);
         });
 
         test('2 otroka', () => {
-            expect(calc.calculateChildRelief(2, false)).toBe(6564.96);
+            expect(calc.calculateChildRelief(2, false)).toBe(5086.16);
         });
 
         test('3 otroci', () => {
-            expect(calc.calculateChildRelief(3, false)).toBe(12501.39);
+            expect(calc.calculateChildRelief(3, false)).toBe(9504.70);
         });
     });
 
@@ -521,23 +521,23 @@ describe('olajšave za otroke - letno', () => {
         const calc = new DohodninaCalculator(2020);
 
         test('1 otrok', () => {
-            expect(calc.calculateChildRelief(1, false)).toBe(2397.83);
+            expect(calc.calculateChildRelief(1, false)).toBe(2436.92);
         });
 
         test('2 otroka', () => {
-            expect(calc.calculateChildRelief(2, false)).toBe(6564.96);
+            expect(calc.calculateChildRelief(2, false)).toBe(5086.16);
         });
 
         test('3 otroci', () => {
-            expect(calc.calculateChildRelief(3, false)).toBe(12501.39);
+            expect(calc.calculateChildRelief(3, false)).toBe(9504.70);
         });
 
         test('4 otroci', () => {
-            expect(calc.calculateChildRelief(4, false)).toBe(20207.12);
+            expect(calc.calculateChildRelief(4, false)).toBe(15692.55);
         });
 
         test('5 otrok', () => {
-            expect(calc.calculateChildRelief(5, false)).toBe(29682.15);
+            expect(calc.calculateChildRelief(5, false)).toBe(23649.69);
         });
     });
 });
@@ -576,6 +576,10 @@ describe('splošna olajšava', () => {
 
         test('osnovna olajšava', () => {
             expect(calc.calculateGeneralRelief(20000, false)).toBe(5000.00);
+        });
+
+        test('minimalna plača - enačba FURS', () => {
+            expect(calc.calculateGeneralRelief(15046.80, false)).toBe(6117.67);
         });
     });
 

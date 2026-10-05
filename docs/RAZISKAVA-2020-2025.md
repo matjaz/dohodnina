@@ -78,10 +78,11 @@ Davčna lestvica je ostala nespremenjena. Glavna sprememba je uvedba **OZP** (ob
 |------|------------------|-----------------|-------------------|
 | 2020 | 3.500 € | 13.316,83 € | ~22.200 € |
 | 2021 | 3.500 € | 13.316,83 € | ~22.200 € |
-| 2022 | 4.500 € | 15.243,06 € | ~22.700 € |
-| 2023 | 5.000 € | 15.933 € | ~23.700 € |
-| 2024 | 5.000 € | 15.933 € | ~23.700 € |
+| 2022 | 4.500 € | 13.716,33 € | ~22.700 € |
+| 2023 | 5.000 € | 16.000 € | ~23.761 € |
+| 2024 | 5.000 € | 16.000 € | ~23.761 € |
 | 2025 | 5.260 € | 16.832 € | ~25.000 € |
+| 2026 | 5.551,93 € | 17.766,18 € | ~26.384 € |
 
 > ℹ️ **Opomba**: Leta 2020 je bila splošna olajšava povišana iz 3.302 € na 3.500 €.
 
@@ -104,27 +105,23 @@ dodatna_olajšava = konstanta - koeficient × bruto_dohodek
 
 ### Pregled po letih
 
-| Leto | 1. otrok | 2. otrok (skupaj) | 3. otrok (skupaj) |
-|------|----------|-------------------|-------------------|
-| 2020 | 2.397,83 € | 6.564,96 € | 12.501,39 € |
-| 2021 | 2.397,83 € | 6.564,96 € | 12.501,39 € |
-| 2022 | 2.460,56 € | 6.743,32 € | 12.847,08 € |
-| 2023 | 2.701,23 € | 7.361,46 € | 13.980,69 € |
-| 2024 | 2.701,23 € | 7.361,46 € | 13.980,69 € |
-| 2025 | 2.838,30 € | 7.737,47 € | 14.697,51 € |
+| Leto | 1. otrok | 2. otrok | 3. otrok | Skupaj za 2 | Skupaj za 3 |
+|------|----------|----------|----------|-------------|-------------|
+| 2020–2021 | 2.436,92 € | 2.649,24 € | 4.418,54 € | 5.086,16 € | 9.504,70 € |
+| 2022 | 2.510,03 € | 2.728,72 € | 4.551,10 € | 5.238,75 € | 9.789,85 € |
+| 2023–2024 | 2.698,00 € | 2.933,00 € | 4.892,00 € | 5.631,00 € | 10.523,00 € |
+| 2025 | 2.838,30 € | 3.085,52 € | 5.146,39 € | 5.923,82 € | 11.070,21 € |
+| 2026 | 2.995,83 € | 3.256,77 € | 5.432,02 € | 6.252,60 € | 11.684,62 € |
 
 ### Formula
 
-Olajšava za vsakega naslednjega otroka se povečuje progresivno:
-- 2. otrok = 1. otrok + inkrement
-- 3. otrok = 2. otrok + inkrement
-- itd.
+Po 114. členu ZDoh-2 se olajšava določi za vsakega otroka posebej. Drugi otrok je le malo višji od prvega. Od tretjega otroka naprej se olajšava glede na predhodnega otroka poveča za objavljeni korak:
 
-**Inkrementalne vrednosti:**
-- 2020-2021: 1.769,30 €
+- 2020–2021: 1.769,30 €
 - 2022: 1.822,38 €
-- 2023-2024: 1.959,00 €
+- 2023–2024: 1.959,00 €
 - 2025: 2.060,87 €
+- 2026: 2.175,25 €
 
 ---
 
@@ -146,7 +143,7 @@ Olajšava za vsakega naslednjega otroka se povečuje progresivno:
 | Prispevek | 2020-2023 | 2024 | 2025 |
 |-----------|-----------|------|------|
 | Pokojninsko (PIZ) | 8,85% | 8,85% | 8,85% |
-| Zdravstveno (ZZ) | 6,53% | 6,53% | **6,56%** |
+| Zdravstveno (ZZ) | 6,56% | 6,56% | 6,56% |
 | Zaposlovanje | 0,06% | 0,06% | 0,06% |
 | Starševsko varstvo | 0,10% | 0,10% | 0,10% |
 | Poškodbe pri delu | 0,53% | 0,53% | 0,53% |
@@ -160,6 +157,7 @@ Olajšava za vsakega naslednjega otroka se povečuje progresivno:
 | 2020-2023 | 0 € |
 | 2024 | 35,00 € |
 | 2025 (od marca) | 37,17 € |
+| 2026 (od marca) | 39,36 € |
 
 > **Pomembno**: OZP se odšteje PRED izračunom davčne osnove, kar zmanjša dohodnino.
 

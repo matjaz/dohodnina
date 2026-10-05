@@ -54,7 +54,9 @@ console.log('Prispevki:', result.contributions.employee.total.toFixed(2), '€')
 - ✅ **Prispevek za dolgotrajno oskrbo (1%)** - od julija 2025
 - ✅ Splošna olajšava
 - ✅ Olajšava za otroke
-- ✅ Dodatne olajšave (študent, mladi delavec, družinski člani, invalidnost, starost 70+)
+- ✅ Dodatne olajšave (študent, mladi delavec, družinski člani, invalidnost, starost 70+, posebna nega otroka)
+- ✅ Zmanjšanje dohodnine za nove rezidente (7 % plače, od 2025)
+- ✅ Neobdavčen zimski regres do polovice minimalne plače (od 2025)
 
 ## Pomembne spremembe za 2025 (od julija 2025)
 
@@ -138,8 +140,8 @@ const result = calc.calculate(1277.72, { period: 'monthly' });
 - Bruto plača: **1.277,72 €**
 - Prispevki delojemalca (vključno z OZP): **332,33 €**
 - Osnova po prispevkih: **945,39 €**
-- Olajšave: **526,00 €**
-- Davčna osnova: **419,39 €**
+- Olajšave: **584,84 €**
+- Davčna osnova: **360,55 €**
 - Dohodnina: **57,69 €**
 - **Neto plača: 887,70 €**
 - **Efektivna davčna stopnja: 40,67%** (upošteva strošek delodajalca)
@@ -184,10 +186,12 @@ const result = calc.calculate(24000, {
 
 **Rezultat:**
 - Bruto dohodek: **24.000,00 €**
-- Prispevki (vključno z OZP): **5.990,04 €**
+- Prispevki (vključno z OZP): **5.865,70 €**
 - Olajšave (splošna + otrok): **8.098,30 €**
-- Dohodnina: **1.656,00 €**
-- **Neto dohodek: 16.353,96 €**
+- Dohodnina: **1.688,33 €**
+- **Neto dohodek: 16.445,97 €**
+
+Letni izračun za 2025 upošteva, da je prispevek za dolgotrajno oskrbo veljal 6 mesecev in da je bil OZP januarja in februarja še 35 €.
 
 ## Demo
 
@@ -235,7 +239,15 @@ Vsi izračuni so usklajeni z:
 - Pravilnikom FURS
 - Uradnim listom Republike Slovenije (spremembe prispevkov)
 
-**Datum zadnje posodobitve:** Februar 2026
+**Datum zadnje posodobitve:** Oktober 2026
+
+Uskladitev z objavljenimi predpisi:
+
+- Lestvica, splošna olajšava in posebne olajšave za 2025 in 2026 se ujemajo s pravilniki (Uradni list RS, št. 108/24 in 104/25) in obvestili FURS.
+- Olajšava za otroke sledi 114. členu ZDoh-2: drugi otrok ni prvi plus veliki korak. Veliki korak velja od tretjega otroka naprej.
+- Splošna olajšava 2023 in 2024 uporablja prag 16.000 € in enačbo `18.761,40 − 1,17259 × skupni dohodek` (ZIPRS2425, uskladitve za 2024 ni bilo).
+- Od leta 2025 je uveljavljeno zmanjšanje dohodnine za nove rezidente (113.a člen ZDoh-2, 7 % plače) in neobdavčen zimski regres do polovice minimalne plače (ZPZR).
+- Lestvica za leto 2027 še ni objavljena. Prispevek za dolgotrajno oskrbo ostaja 1 % za delojemalca in 1 % za delodajalca.
 
 ## Viri
 
