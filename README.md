@@ -53,7 +53,7 @@ console.log('Prispevki:', result.contributions.employee.total.toFixed(2), '€')
 - ✅ **Obvezni zdravstveni prispevek (OZP)** - od 2024
 - ✅ **Prispevek za dolgotrajno oskrbo (1%)** - od julija 2025
 - ✅ Splošna olajšava
-- ✅ Olajšava za otroke
+- ✅ Olajšava za otroke (skupni vrstni red; posebna nega zasede svoje mesto)
 - ✅ Dodatne olajšave (študent, mladi delavec, družinski člani, invalidnost, starost 70+, posebna nega otroka)
 - ✅ Zmanjšanje dohodnine za nove rezidente (7 % plače, od 2025)
 - ✅ Neobdavčen zimski regres do polovice minimalne plače (od 2025)
@@ -247,6 +247,9 @@ Uskladitev z objavljenimi predpisi:
 - Olajšava za otroke sledi 114. členu ZDoh-2: drugi otrok ni prvi plus veliki korak. Veliki korak velja od tretjega otroka naprej.
 - Splošna olajšava 2023 in 2024 uporablja prag 16.000 € in enačbo `18.761,40 − 1,17259 × skupni dohodek` (ZIPRS2425, uskladitve za 2024 ni bilo).
 - Od leta 2025 je uveljavljeno zmanjšanje dohodnine za nove rezidente (113.a člen ZDoh-2, 7 % plače) in neobdavčen zimski regres do polovice minimalne plače (ZPZR).
+- `numberOfChildren` so samo otroci brez posebne nege. `specialCareChildren` so dodatni in zasedejo naslednja mesta (dva navadna in en s posebno nego: posebni je tretji). Posebnega otroka ne štejte še v `numberOfChildren`. Drugačen vrstni red določa `children: [{ specialCare: true }, { specialCare: false }]`.
+- Mesečna splošna olajšava ob presežku zimskega regresa upošteva `12 × plača + presežek`, ne `(plača + presežek) × 12`.
+- 7 % za novega rezidenta se računa od plače (`grossIncome`), ne od obdavčljivega presežka zimskega regresa.
 - Lestvica za leto 2027 še ni objavljena. Prispevek za dolgotrajno oskrbo ostaja 1 % za delojemalca in 1 % za delodajalca.
 
 ## Viri

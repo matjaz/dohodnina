@@ -137,20 +137,86 @@ export class DohodninaCalculator {
   }
 
   /**
-   * Olajšava za otroka, ki potrebuje posebno nego in varstvo.
-   * Enaka lestvica povečanj kot pri navadnem otroku, osnova pa je posebna olajšava (114. člen).
+   * Letna olajšava enega otroka na mestu v skupnem vrstnem redu (1 = prvi otrok).
+   * Otrok s posebno nego dobi osnovo iz 2. točke 114. člena, povečano za isti korak
+   * kot navaden otrok na tem mestu (drugi odstavek 114. člena).
    */
-  calculateSpecialCareRelief(numberOfChildren, isMonthly = false) {
+  childReliefAmount(position, specialCare = false) {
+    const ordinary = this.childAmount(position);
+    if (!specialCare) return ordinary;
     const base = this.reliefs.dependentChild.specialCare;
-    if (!numberOfChildren || !base) return 0;
+    if (!base) return ordinary;
+    return round(base + (ordinary - this.childAmount(1)));
+  }
 
-    const first = this.childAmount(1);
+  /**
+   * Olajšava za otroke s posebno nego, ki zasedejo zaporedna mesta od `firstPosition`.
+   * Privzeto so to prvi otroci. V družini z navadnimi otroki podajte mesto prvega
+   * otroka s posebno nego, sicer korak ostane pri prvem otroku.
+   */
+  calculateSpecialCareRelief(count, isMonthly = false, firstPosition = 1) {
+    if (!count || !this.reliefs.dependentChild.specialCare) return 0;
+    if (!Number.isInteger(firstPosition) || firstPosition < 1) {
+      throw new Error('Mesto otroka s posebno nego se šteje od 1 naprej');
+    }
+
     let total = 0;
-    for (let n = 1; n <= numberOfChildren; n++) {
-      const annual = round(base + (this.childAmount(n) - first));
+    for (let n = 0; n < count; n++) {
+      const annual = this.childReliefAmount(firstPosition + n, true);
       total += isMonthly ? round(annual / 12) : annual;
     }
     return round(total);
+  }
+
+  /**
+   * Skupni vrstni red vzdrževanih otrok.
+   *
+   * `numberOfChildren` so samo otroci brez posebne nege. `specialCareChildren` so
+   * dodatni otroci in se vanj ne štejejo še enkrat: najprej navadni, nato posebna
+   * nega. Dva navadna in en s posebno nego pomenita, da je posebni tretji otrok.
+   * Če bi posebnega šteli v obeh poljih, bi dobil še eno navadno mesto.
+   *
+   * `children` je polje `{ specialCare: boolean }` od prvega otroka in preglasi
+   * oba števca. Uporabite ga, kadar otrok s posebno nego ni zadnji.
+   */
+  orderedChildren({ numberOfChildren = 0, specialCareChildren = 0, children = null } = {}) {
+    if (children != null) {
+      if (numberOfChildren > 0 || specialCareChildren > 0) {
+        throw new Error('Seznam children že določa vrstni red; numberOfChildren in specialCareChildren pustite pri 0');
+      }
+      if (!Array.isArray(children)) {
+        throw new Error('Seznam otrok mora biti polje');
+      }
+      return children.map((child, index) => {
+        if (!child || typeof child.specialCare !== 'boolean') {
+          throw new Error(`Otrok na mestu ${index + 1} mora imeti specialCare: true ali false`);
+        }
+        return { specialCare: child.specialCare };
+      });
+    }
+
+    const ordered = [];
+    for (let n = 0; n < numberOfChildren; n++) ordered.push({ specialCare: false });
+    for (let n = 0; n < specialCareChildren; n++) ordered.push({ specialCare: true });
+    return ordered;
+  }
+
+  /**
+   * Olajšave po skupnem vrstnem redu. Vsak otrok dobi en znesek, na svojem mestu.
+   */
+  splitChildRelief(ordered, isMonthly = false) {
+    let ordinaryTotal = 0;
+    let specialTotal = 0;
+    ordered.forEach((child, index) => {
+      const annual = this.childReliefAmount(index + 1, child.specialCare);
+      const amount = isMonthly ? round(annual / 12) : annual;
+      if (child.specialCare) specialTotal += amount;
+      else ordinaryTotal += amount;
+    });
+    return {
+      children: round(ordinaryTotal),
+      specialCare: round(specialTotal)
+    };
   }
 
   /**
@@ -178,7 +244,8 @@ export class DohodninaCalculator {
       isVolunteer = false,
       pensionContribution = 0,
       isNewResident = false,
-      winterBonus = 0
+      winterBonus = 0,
+      children = null
     } = options;
 
     const isMonthly = period === 'monthly';
@@ -229,9 +296,18 @@ export class DohodninaCalculator {
     const incomeAfterContributions = taxableGross - employeeContributions.total;
 
     // 3. OLAJŠAVE
-    const generalRelief = this.calculateGeneralRelief(taxableGross, isMonthly);
-    const childRelief = this.calculateChildRelief(numberOfChildren, isMonthly);
-    const specialCareRelief = this.calculateSpecialCareRelief(specialCareChildren, isMonthly);
+    // Mesečna akontacija veže splošno olajšavo na redno plačo × 12. Obdavčljivi
+    // presežek zimskega regresa je enkratno izplačilo (ZPZR, 127. člen za regres):
+    // prišteje se enkrat, ne kot dvanajst dodatnih mesečnih plač.
+    const generalRelief = (isMonthly && taxableWinterBonus > 0)
+      ? round(this.reliefs.general.formula(round(grossIncome * 12 + taxableWinterBonus)) / 12)
+      : this.calculateGeneralRelief(isMonthly ? grossIncome : taxableGross, isMonthly);
+    const family = this.splitChildRelief(
+      this.orderedChildren({ numberOfChildren, specialCareChildren, children }),
+      isMonthly
+    );
+    const childRelief = family.children;
+    const specialCareRelief = family.specialCare;
 
     let totalReliefs = generalRelief + childRelief + specialCareRelief;
 
@@ -270,7 +346,9 @@ export class DohodninaCalculator {
     // 5. DOHODNINA (akontacija)
     let tax = this.calculateTax(taxBase, period);
 
-    // ZDoh-2, 113.a člen: posebna olajšava za nove rezidente je zmanjšanje dohodnine (7 % plače), od 2025.
+    // ZDoh-2, 113.a člen: zmanjšanje dohodnine za 7 % prejete plače oziroma nadomestila
+    // plače, od 2025. Osnova je argument plače, ne obdavčljivi presežek zimskega regresa
+    // (ta po ZPZR ni plača, ampak plačilo za poslovno uspešnost ali drug dohodek).
     let newResidentReduction = 0;
     if (isNewResident && this.reliefs.newResidentRate) {
       newResidentReduction = round(Math.min(tax, grossIncome * this.reliefs.newResidentRate));

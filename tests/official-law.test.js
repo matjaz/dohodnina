@@ -86,4 +86,55 @@ describe('uradni parametri dohodnine', () => {
         expect(result.winterBonus.taxable).toBe(361.14);
         expect(result.taxableGross).toBe(2361.14);
     });
+
+    test('2025 mešana družina: en navaden in en otrok s posebno nego', () => {
+        const calc = new DohodninaCalculator(2025);
+        const result = calc.calculate(24000, { numberOfChildren: 1, specialCareChildren: 1 });
+        expect(result.reliefs.children).toBe(2838.30);
+        // Posebna nega je drugi otrok: 10285.40 + (3085.52 − 2838.30)
+        expect(result.reliefs.specialCare).toBe(10532.62);
+    });
+
+    test('2025 dva navadna in en s posebno nego: posebni dobi korak tretjega otroka', () => {
+        const calc = new DohodninaCalculator(2025);
+        const result = calc.calculate(24000, { numberOfChildren: 2, specialCareChildren: 1 });
+        expect(result.reliefs.children).toBe(5923.82);
+        // 10285.40 + (5146.39 − 2838.30), ne osnova prvega otroka 10285.40
+        expect(result.reliefs.specialCare).toBe(12593.49);
+        expect(calc.calculateSpecialCareRelief(1, false, 3)).toBe(12593.49);
+    });
+
+    test('children določi mesto posebne nege, števca se ne prištejeta še enkrat', () => {
+        const calc = new DohodninaCalculator(2025);
+        const result = calc.calculate(24000, {
+            children: [{ specialCare: true }, { specialCare: false }]
+        });
+        expect(result.reliefs.specialCare).toBe(10285.40);
+        expect(result.reliefs.children).toBe(3085.52);
+        expect(() => calc.calculate(24000, {
+            numberOfChildren: 1,
+            children: [{ specialCare: true }]
+        })).toThrow('children');
+    });
+
+    test('mesečni presežek zimskega regresa ne zniža splošne olajšave za dvanajst mesecev', () => {
+        const calc = new DohodninaCalculator(2025);
+        const plain = calc.calculate(1277.72, { period: 'monthly' });
+        const withBonus = calc.calculate(1277.72, { period: 'monthly', winterBonus: 1138.86 });
+        expect(withBonus.winterBonus.taxable).toBe(500);
+        expect(plain.reliefs.general).toBe(584.84);
+        // Letna ocena je 12 × 1277.72 + 500 = 15832.64, ne (1277.72 + 500) × 12.
+        expect(withBonus.reliefs.general).toBe(535.98);
+    });
+
+    test('7 % novega rezidenta se računa od plače, ne od presežka zimskega regresa', () => {
+        const calc = new DohodninaCalculator(2026);
+        const result = calc.calculate(6000, {
+            period: 'monthly',
+            isNewResident: true,
+            winterBonus: 1000
+        });
+        expect(result.taxableGross).toBe(6259.06);
+        expect(result.newResidentReduction).toBe(420.00);
+    });
 });
