@@ -15,13 +15,13 @@ describe('osnovna dohodnina', () => {
 
     test('2023', () => {
         const calc = new DohodninaCalculator(2023)
-        expect(calc.calculate(16000).tax).toBe(1194.24)
+        expect(calc.calculate(16000).tax).toBe(1194.25)
         expect(calc.calculate(24000).tax).toBe(2685.46)
     })
 
     test('2024', () => {
         const calc = new DohodninaCalculator(2024)
-        expect(calc.calculate(16000).tax).toBe(1127.04)
+        expect(calc.calculate(16000).tax).toBe(1127.05)
         expect(calc.calculate(24000).tax).toBe(2576.26)
     })
 
@@ -35,26 +35,26 @@ describe('osnovna dohodnina', () => {
 describe('dohodnina 1 otrok', () => {
     test('2021', () => {
         const calc = new DohodninaCalculator(2021)
-        expect(calc.calculate(16000, { numberOfChildren: 1 }).tax).toBe(1050.59)
-        expect(calc.calculate(24000, { numberOfChildren: 1 }).tax).toBe(2477.52)
+        expect(calc.calculate(16000, { numberOfChildren: 1 }).tax).toBe(1044.33)
+        expect(calc.calculate(24000, { numberOfChildren: 1 }).tax).toBe(2467.36)
     })
 
     test('2022', () => {
         const calc = new DohodninaCalculator(2022)
-        expect(calc.calculate(16000, { numberOfChildren: 1 }).tax).toBe(880.55)
-        expect(calc.calculate(24000, { numberOfChildren: 1 }).tax).toBe(2175.71)
+        expect(calc.calculate(16000, { numberOfChildren: 1 }).tax).toBe(872.64)
+        expect(calc.calculate(24000, { numberOfChildren: 1 }).tax).toBe(2162.85)
     })
 
     test('2023', () => {
         const calc = new DohodninaCalculator(2023)
-        expect(calc.calculate(16000, { numberOfChildren: 1 }).tax).toBe(762.04)
-        expect(calc.calculate(24000, { numberOfChildren: 1 }).tax).toBe(1983.14)
+        expect(calc.calculate(16000, { numberOfChildren: 1 }).tax).toBe(762.57)
+        expect(calc.calculate(24000, { numberOfChildren: 1 }).tax).toBe(1983.98)
     })
 
     test('2024', () => {
         const calc = new DohodninaCalculator(2024)
-        expect(calc.calculate(16000, { numberOfChildren: 1 }).tax).toBe(694.84)
-        expect(calc.calculate(24000, { numberOfChildren: 1 }).tax).toBe(1873.94)
+        expect(calc.calculate(16000, { numberOfChildren: 1 }).tax).toBe(695.37)
+        expect(calc.calculate(24000, { numberOfChildren: 1 }).tax).toBe(1874.78)
     })
 
     test('2025', () => {

@@ -1,5 +1,5 @@
 /**
- * Knjižnica za izračun dohodnine v Sloveniji (2020-2025)
+ * Knjižnica za izračun dohodnine v Sloveniji (2020-2026)
  */
 
 import TAX_BRACKETS from './brackets.js';
@@ -109,20 +109,114 @@ export class DohodninaCalculator {
   }
 
   /**
-   * Izračuna olajšavo za vzdrževane otroke
+   * Letna olajšava za otroka na danem mestu (1 = prvi otrok).
+   * ZDoh-2, 114. člen: drugi otrok se poveča le za majhen znesek,
+   * od tretjega naprej pa za večji korak glede na predhodnega otroka.
+   */
+  childAmount(position) {
+    const child = this.reliefs.dependentChild;
+    const amounts = child.amounts || [child.first];
+    if (position <= amounts.length) return amounts[position - 1];
+    const last = amounts[amounts.length - 1];
+    return round(last + (position - amounts.length) * child.furtherIncrement);
+  }
+
+  /**
+   * Izračuna olajšavo za vzdrževane otroke.
+   * Mesečni znesek je vsota zaokroženih mesečnih olajšav posameznega otroka (FURS 1/12).
    */
   calculateChildRelief(numberOfChildren, isMonthly = false) {
-    if (numberOfChildren === 0) return 0;
+    if (!numberOfChildren) return 0;
 
-    const child = this.reliefs.dependentChild;
-    let total = child.first;
+    let total = 0;
+    for (let n = 1; n <= numberOfChildren; n++) {
+      const annual = this.childAmount(n);
+      total += isMonthly ? round(annual / 12) : annual;
+    }
+    return round(total);
+  }
 
-    for (let i = 1; i < numberOfChildren; i++) {
-      const previousRelief = i === 1 ? child.first : child.first + (i - 1) * child.increment;
-      total += previousRelief + child.increment;
+  /**
+   * Letna olajšava enega otroka na mestu v skupnem vrstnem redu (1 = prvi otrok).
+   * Otrok s posebno nego dobi osnovo iz 2. točke 114. člena, povečano za isti korak
+   * kot navaden otrok na tem mestu (drugi odstavek 114. člena).
+   */
+  childReliefAmount(position, specialCare = false) {
+    const ordinary = this.childAmount(position);
+    if (!specialCare) return ordinary;
+    const base = this.reliefs.dependentChild.specialCare;
+    if (!base) return ordinary;
+    return round(base + (ordinary - this.childAmount(1)));
+  }
+
+  /**
+   * Olajšava za otroke s posebno nego, ki zasedejo zaporedna mesta od `firstPosition`.
+   * Privzeto so to prvi otroci. V družini z navadnimi otroki podajte mesto prvega
+   * otroka s posebno nego, sicer korak ostane pri prvem otroku.
+   */
+  calculateSpecialCareRelief(count, isMonthly = false, firstPosition = 1) {
+    if (!count || !this.reliefs.dependentChild.specialCare) return 0;
+    if (!Number.isInteger(firstPosition) || firstPosition < 1) {
+      throw new Error('Mesto otroka s posebno nego se šteje od 1 naprej');
     }
 
-    return round(isMonthly ? total / 12 : total);
+    let total = 0;
+    for (let n = 0; n < count; n++) {
+      const annual = this.childReliefAmount(firstPosition + n, true);
+      total += isMonthly ? round(annual / 12) : annual;
+    }
+    return round(total);
+  }
+
+  /**
+   * Skupni vrstni red vzdrževanih otrok.
+   *
+   * `numberOfChildren` so samo otroci brez posebne nege. `specialCareChildren` so
+   * dodatni otroci in se vanj ne štejejo še enkrat: najprej navadni, nato posebna
+   * nega. Dva navadna in en s posebno nego pomenita, da je posebni tretji otrok.
+   * Če bi posebnega šteli v obeh poljih, bi dobil še eno navadno mesto.
+   *
+   * `children` je polje `{ specialCare: boolean }` od prvega otroka in preglasi
+   * oba števca. Uporabite ga, kadar otrok s posebno nego ni zadnji.
+   */
+  orderedChildren({ numberOfChildren = 0, specialCareChildren = 0, children = null } = {}) {
+    if (children != null) {
+      if (numberOfChildren > 0 || specialCareChildren > 0) {
+        throw new Error('Seznam children že določa vrstni red; numberOfChildren in specialCareChildren pustite pri 0');
+      }
+      if (!Array.isArray(children)) {
+        throw new Error('Seznam otrok mora biti polje');
+      }
+      return children.map((child, index) => {
+        if (!child || typeof child.specialCare !== 'boolean') {
+          throw new Error(`Otrok na mestu ${index + 1} mora imeti specialCare: true ali false`);
+        }
+        return { specialCare: child.specialCare };
+      });
+    }
+
+    const ordered = [];
+    for (let n = 0; n < numberOfChildren; n++) ordered.push({ specialCare: false });
+    for (let n = 0; n < specialCareChildren; n++) ordered.push({ specialCare: true });
+    return ordered;
+  }
+
+  /**
+   * Olajšave po skupnem vrstnem redu. Vsak otrok dobi en znesek, na svojem mestu.
+   */
+  splitChildRelief(ordered, isMonthly = false) {
+    let ordinaryTotal = 0;
+    let specialTotal = 0;
+    ordered.forEach((child, index) => {
+      const annual = this.childReliefAmount(index + 1, child.specialCare);
+      const amount = isMonthly ? round(annual / 12) : annual;
+      if (child.specialCare) specialTotal += amount;
+      else ordinaryTotal += amount;
+    });
+    return {
+      children: round(ordinaryTotal),
+      specialCare: round(specialTotal)
+    };
   }
 
   /**
@@ -141,13 +235,17 @@ export class DohodninaCalculator {
       period = 'annual',
       month = null,
       numberOfChildren = 0,
+      specialCareChildren = 0,
       isStudent = false,
       isYoungEmployee = false,
       dependentFamilyMembers = 0,
       hasDisability100 = false,
       isOver70 = false,
       isVolunteer = false,
-      pensionContribution = 0
+      pensionContribution = 0,
+      isNewResident = false,
+      winterBonus = 0,
+      children = null
     } = options;
 
     const isMonthly = period === 'monthly';
@@ -168,8 +266,25 @@ export class DohodninaCalculator {
       throw new Error(`Bruto plača (${grossIncome.toFixed(2)} € ${periodText}) ne sme biti manjša od minimalne plače za leto ${this.year} (${minimumWage.toFixed(2)} € ${periodText})`);
     }
 
+    if (winterBonus < 0) {
+      throw new Error('Zimski regres ne sme biti negativen');
+    }
+    if (winterBonus > 0 && this.year < 2025) {
+      throw new Error('Neobdavčen zimski regres po ZPZR velja od leta 2025');
+    }
+    if (specialCareChildren < 0 || numberOfChildren < 0) {
+      throw new Error('Število otrok ne sme biti negativno');
+    }
+
+    // ZPZR: zimski regres do polovice minimalne plače ni v davčni osnovi in nima prispevkov.
+    // Zakon velja od leta 2025. Presežek se prišteje k obdavčljivi plači.
+    const winterBonusCap = this.year >= 2025 ? round(this.wages.min / 24) : 0;
+    const exemptWinterBonus = winterBonusCap ? round(Math.min(winterBonus, winterBonusCap)) : 0;
+    const taxableWinterBonus = round(Math.max(0, winterBonus - exemptWinterBonus));
+    const taxableGross = round(grossIncome + taxableWinterBonus);
+
     // 1. PRISPEVKI DELOJEMALCA (odštejejo se od bruto plače)
-    const employeeContributions = this.calculateSocialContributions(grossIncome, 'employee', month, !isMonthly);
+    const employeeContributions = this.calculateSocialContributions(taxableGross, 'employee', month, !isMonthly);
 
     // 1a. OBVEZNI ZDRAVSTVENI PRISPEVEK (OZP)
     const healthInsuranceFee = this.getHealthInsuranceFee(isMonthly, month);
@@ -178,13 +293,23 @@ export class DohodninaCalculator {
     employeeContributions.total = round(employeeContributions.total + healthInsuranceFee);
 
     // 2. OSNOVA PO PRISPEVKIH (vključuje odbitek vseh prispevkov + OZP)
-    const incomeAfterContributions = grossIncome - employeeContributions.total;
+    const incomeAfterContributions = taxableGross - employeeContributions.total;
 
     // 3. OLAJŠAVE
-    const generalRelief = this.calculateGeneralRelief(grossIncome, isMonthly);
-    const childRelief = this.calculateChildRelief(numberOfChildren, isMonthly);
+    // Mesečna akontacija veže splošno olajšavo na redno plačo × 12. Obdavčljivi
+    // presežek zimskega regresa je enkratno izplačilo (ZPZR, 127. člen za regres):
+    // prišteje se enkrat, ne kot dvanajst dodatnih mesečnih plač.
+    const generalRelief = (isMonthly && taxableWinterBonus > 0)
+      ? round(this.reliefs.general.formula(round(grossIncome * 12 + taxableWinterBonus)) / 12)
+      : this.calculateGeneralRelief(isMonthly ? grossIncome : taxableGross, isMonthly);
+    const family = this.splitChildRelief(
+      this.orderedChildren({ numberOfChildren, specialCareChildren, children }),
+      isMonthly
+    );
+    const childRelief = family.children;
+    const specialCareRelief = family.specialCare;
 
-    let totalReliefs = generalRelief + childRelief;
+    let totalReliefs = generalRelief + childRelief + specialCareRelief;
 
     if (isStudent && this.reliefs.student) {
       totalReliefs += isMonthly ? this.reliefs.student.annual / 12 : this.reliefs.student.annual;
@@ -219,19 +344,32 @@ export class DohodninaCalculator {
     const taxBase = round(Math.max(0, incomeAfterContributions - totalReliefs));
 
     // 5. DOHODNINA (akontacija)
-    const tax = this.calculateTax(taxBase, period);
+    let tax = this.calculateTax(taxBase, period);
+
+    // ZDoh-2, 113.a člen: zmanjšanje dohodnine za 7 % prejete plače oziroma nadomestila
+    // plače, od 2025. Osnova je argument plače, ne obdavčljivi presežek zimskega regresa
+    // (ta po ZPZR ni plača, ampak plačilo za poslovno uspešnost ali drug dohodek).
+    let newResidentReduction = 0;
+    if (isNewResident && this.reliefs.newResidentRate) {
+      newResidentReduction = round(Math.min(tax, grossIncome * this.reliefs.newResidentRate));
+      tax = round(tax - newResidentReduction);
+    }
 
     // 6. NETO PLAČA (employeeContributions.total že vključuje OZP)
-    const netIncome = round(grossIncome - employeeContributions.total - tax);
+    // Neobdavčen zimski regres se prišteje k neto, ker od njega ni prispevkov niti dohodnine.
+    const netIncome = round(taxableGross - employeeContributions.total - tax + exemptWinterBonus);
 
     // PRISPEVKI DELODAJALCA
-    const employerContributions = this.calculateSocialContributions(grossIncome, 'employer', month, !isMonthly);
+    const employerContributions = this.calculateSocialContributions(taxableGross, 'employer', month, !isMonthly);
 
     // SKUPNE DAJATVE (država prejme) - employeeContributions.total že vključuje OZP
     const totalTaxes = round(employeeContributions.total + tax + employerContributions.total);
 
+    const totalCostForEmployer = round(taxableGross + employerContributions.total + exemptWinterBonus);
+
     return {
       grossIncome: round(grossIncome),
+      taxableGross,
       contributions: {
         employee: employeeContributions,
         employer: employerContributions,
@@ -241,15 +379,22 @@ export class DohodninaCalculator {
       reliefs: {
         general: generalRelief,
         children: childRelief,
+        specialCare: specialCareRelief,
         total: round(totalReliefs)
       },
       taxBase,
       tax,
+      newResidentReduction,
+      winterBonus: {
+        paid: round(winterBonus),
+        exempt: exemptWinterBonus,
+        taxable: taxableWinterBonus
+      },
       healthInsuranceFee,
       netIncome,
-      totalCostForEmployer: round(grossIncome + employerContributions.total),
+      totalCostForEmployer,
       totalTaxes,
-      effectiveRate: round((totalTaxes / (grossIncome + employerContributions.total)) * 100),
+      effectiveRate: round((totalTaxes / totalCostForEmployer) * 100),
       year: this.year,
       period
     };
